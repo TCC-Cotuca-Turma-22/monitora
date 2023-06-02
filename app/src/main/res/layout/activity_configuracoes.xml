@@ -4,7 +4,7 @@
     android:layout_width="match_parent"
     android:layout_height="match_parent"
     android:background="@drawable/fundo"
-    tools:context=".ConfiguracaoActivity">
+    tools:context=".ConfiguracoesActivity">
 
     <!-- Elementos da tela de instruções e opções -->
 
@@ -12,8 +12,10 @@
         android:id="@+id/ligaDesligaButton"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
-        android:layout_marginTop="16dp"
-        android:layout_marginStart="16dp"
+        android:layout_alignParentStart="true"
+        android:layout_alignParentTop="true"
+        android:layout_marginStart="49dp"
+        android:layout_marginTop="566dp"
         android:text="Liga/Desliga" />
 
     <Button
@@ -23,6 +25,18 @@
         android:layout_marginTop="16dp"
         android:layout_marginEnd="16dp"
         android:layout_alignParentEnd="true"
+        android:text="Configurar" />
+
+    <Button
+        android:id="@+id/gravarButton"
+        android:layout_width="152dp"
+        android:layout_height="wrap_content"
+        android:layout_alignParentStart="true"
+        android:layout_alignParentTop="true"
+        android:layout_alignParentEnd="true"
+        android:layout_marginStart="211dp"
+        android:layout_marginTop="558dp"
+        android:layout_marginEnd="48dp"
         android:text="Configurar" />
 
 </RelativeLayout>
