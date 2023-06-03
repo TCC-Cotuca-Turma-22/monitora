@@ -9,25 +9,37 @@
     <EditText
         android:id="@+id/aparelhoEditText"
         android:layout_width="match_parent"
-        android:layout_height="wrap_content"
-        android:layout_margin="16dp"
-        android:hint="Aparelho" />
+        android:layout_height="48dp"
+        android:layout_alignParentBottom="true"
+        android:layout_marginStart="16dp"
+        android:layout_marginEnd="16dp"
+        android:layout_marginBottom="356dp"
+        android:foregroundTint="#F8F5F5"
+        android:hint="Aparelho"
+        android:textColor="@color/white"
+        android:textColorHint="#FBFAFA" />/>
 
     <EditText
         android:id="@+id/temporizadorEditText"
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
-        android:layout_below="@id/aparelhoEditText"
-        android:layout_margin="16dp"
-        android:hint="Temporizador" />
+        android:layout_alignParentTop="true"
+        android:layout_marginStart="16dp"
+        android:layout_marginTop="421dp"
+        android:layout_marginEnd="16dp"
+        android:layout_marginBottom="16dp"
+        android:hint="Temporizador"
+        android:textColor="@color/white"
+        android:textColorHint="#FBFAFA" />
 
     <Button
         android:id="@+id/gravarButton"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
         android:layout_below="@id/temporizadorEditText"
-        android:layout_marginTop="16dp"
-        android:layout_centerHorizontal="true"
+        android:layout_alignParentStart="true"
+        android:layout_marginStart="166dp"
+        android:layout_marginTop="39dp"
         android:text="Gravar" />
 
 </RelativeLayout>

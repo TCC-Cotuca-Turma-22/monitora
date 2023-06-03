@@ -11,9 +11,11 @@ class ConfiguracoesActivity : AppCompatActivity() {
         super.onCreate(savedInstanceState)
         setContentView(R.layout.activity_configuracoes)
 
-        val gravarButton: Button = findViewById(R.id.gravarButton)
+        val configurarButton: Button = findViewById(R.id.configurarButton)
+        val ligaDesligaButton: Button = findViewById(R.id.ligaDesligaButton)
+        val retornarButton: Button = findViewById(R.id.retornarButton)
 
-        gravarButton.setOnClickListener {
+        retornarButton.setOnClickListener {
             // Lógica para gravar os dados do usuário na tabela de usuários
             // após a gravação, retorne para a tela de login (MainActivity)
             val intent = Intent(this, MainActivity::class.java)

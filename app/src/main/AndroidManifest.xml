@@ -13,23 +13,26 @@
         tools:targetApi="31">
         <activity
             android:name=".MainActivity"
-            android:exported="true">
+            android:exported="true"
+            android:theme="@style/Theme.AppCompat.NoActionBar">
             <intent-filter>
                 <action android:name="android.intent.action.MAIN" />
-
                 <category android:name="android.intent.category.LAUNCHER" />
             </intent-filter>
         </activity>
         <activity
             android:name=".CadastroUsuarioActivity"
-            android:label="Cadastro de Usuário" />
+            android:label="Cadastro de Usuário"
+            android:theme="@style/Theme.AppCompat.NoActionBar"/>
         <activity
             android:name=".ConfiguracoesActivity"
             android:exported="false"
-            android:label="Instruções e Opções" />
+            android:label="Instruções e Opções"
+            android:theme="@style/Theme.AppCompat.NoActionBar"/>
         <activity
             android:name=".ConfigurarActivity"
-            android:label="Configuração" />
+            android:label="Configuração"
+            android:theme="@style/Theme.AppCompat.NoActionBar"/>
     </application>
 
 </manifest>

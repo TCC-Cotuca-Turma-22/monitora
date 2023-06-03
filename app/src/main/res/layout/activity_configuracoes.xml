@@ -22,21 +22,25 @@
         android:id="@+id/configurarButton"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
-        android:layout_marginTop="16dp"
-        android:layout_marginEnd="16dp"
+        android:layout_alignParentTop="true"
         android:layout_alignParentEnd="true"
+        android:layout_marginTop="564dp"
+        android:layout_marginEnd="50dp"
         android:text="Configurar" />
 
     <Button
-        android:id="@+id/gravarButton"
-        android:layout_width="152dp"
+        android:id="@+id/retornarButton"
+        android:layout_width="wrap_content"
         android:layout_height="wrap_content"
         android:layout_alignParentStart="true"
         android:layout_alignParentTop="true"
         android:layout_alignParentEnd="true"
-        android:layout_marginStart="211dp"
-        android:layout_marginTop="558dp"
-        android:layout_marginEnd="48dp"
-        android:text="Configurar" />
+        android:layout_alignParentBottom="true"
+        android:layout_marginStart="157dp"
+        android:layout_marginTop="387dp"
+        android:layout_marginEnd="166dp"
+        android:layout_marginBottom="296dp"
+        android:text="Voltar" />
+
 
 </RelativeLayout>
