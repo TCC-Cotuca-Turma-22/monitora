@@ -7,8 +7,6 @@
     android:background="@drawable/fundo"
     tools:context=".ConfiguracoesActivity">
 
-    <!-- Elementos da tela de instruções e opções -->
-
     <Button
         android:id="@+id/ligaDesligaButton"
         android:layout_width="wrap_content"

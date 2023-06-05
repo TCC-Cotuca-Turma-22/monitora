@@ -3,7 +3,6 @@ package com.teconsis.monitora
 import java.sql.Connection
 import java.sql.DriverManager
 import java.sql.SQLException
-
 class MySQLConnection(host: String, bd: String, usr: String, pass: String) {
     private val HOST = host
     private val PORT = 3306
