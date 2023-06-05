@@ -30,9 +30,9 @@
         android:layout_alignParentTop="true"
         android:layout_alignParentEnd="true"
         android:layout_centerVertical="true"
-        android:layout_marginStart="13dp"
-        android:layout_marginTop="403dp"
-        android:layout_marginEnd="19dp"
+        android:layout_marginStart="17dp"
+        android:layout_marginTop="377dp"
+        android:layout_marginEnd="15dp"
         android:hint="Senha"
         android:inputType="textPassword"
         android:textColor="@color/white"
@@ -44,8 +44,8 @@
         android:layout_height="wrap_content"
         android:layout_below="@+id/passwordEditText"
         android:layout_alignParentEnd="true"
-        android:layout_marginTop="66dp"
-        android:layout_marginEnd="17dp"
+        android:layout_marginTop="36dp"
+        android:layout_marginEnd="21dp"
         android:text="Novo" />
 
     <TextView
@@ -54,7 +54,7 @@
         android:layout_height="wrap_content"
         android:layout_alignBottom="@+id/passwordEditText"
         android:layout_centerHorizontal="true"
-        android:layout_marginBottom="-169dp"
+        android:layout_marginBottom="-211dp"
         android:text="Esqueceu a senha?"
         android:textColor="#0000FF" />
 
@@ -65,7 +65,7 @@
         android:layout_below="@+id/passwordEditText"
         android:layout_centerVertical="true"
         android:layout_marginStart="16dp"
-        android:layout_marginTop="72dp"
+        android:layout_marginTop="38dp"
         android:text="Entrar" />
 
 </RelativeLayout>

@@ -30,14 +30,17 @@ class MainActivity : AppCompatActivity() {
             val password = passwordEditText.text.toString()
 
             // remover comentários e ajustar para executar no real //
-            /*if (validateLogin(email, password)) {
+            if (validateLogin(email, password)) {
                 // Dados de login válidos, realizar a autenticação no servidor SQLServer
-                authenticateUser(email, password)
+                if (!authenticateUser(email, password)) {
+                    val intent = Intent(this, ConfiguracoesActivity::class.java)
+                    startActivity(intent)
+                } else {
+                    Toast.makeText(this, "Usuário não encontrado.", Toast.LENGTH_SHORT).show()
+                }
             } else {
                 Toast.makeText(this, "Usuário inválido!", Toast.LENGTH_SHORT).show()
-            }*/
-            val intent = Intent(this, ConfiguracoesActivity::class.java)
-            startActivity(intent)
+            }
         }
 
         novoButton.setOnClickListener {
@@ -55,12 +58,10 @@ class MainActivity : AppCompatActivity() {
         return emailPattern.matcher(email).matches() && password.isNotEmpty()
     }
 
-    private fun authenticateUser(email: String, password: String) {
-        // Lógica para autenticar o usuário no servidor SQLServer
-        // Utilize as informações fornecidas (BD22529, regulus.cotuca.unicamp.br, BD22529, BD22529)
-        // Exiba a terceira tela (InstrucoesActivity) se a autenticação for bem-sucedida
-        val intent = Intent(this, ConfigurarActivity::class.java)
-        startActivity(intent)
-        finish() // Encerra a atividade atual (MainActivity)
+    private fun authenticateUser(email: String, password: String): Boolean {
+        val conexaoBD = MySQLConnection("regulus.cotuca.unicamp.br", "bd22597", "bd22597", "bd22597")
+        conexaoBD.createTableIfNotExists()
+        return conexaoBD.autenticarUsuario(email, password)
     }
 }
+

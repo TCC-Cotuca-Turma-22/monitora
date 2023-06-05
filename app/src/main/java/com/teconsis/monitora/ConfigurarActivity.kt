@@ -1,5 +1,6 @@
 package com.teconsis.monitora
 
+import android.content.Intent
 import android.os.Bundle
 import android.widget.Button
 import android.widget.EditText
@@ -17,6 +18,7 @@ class ConfigurarActivity : AppCompatActivity() {
         aparelhoEditText = findViewById(R.id.aparelhoEditText)
         temporizadorEditText = findViewById(R.id.temporizadorEditText)
         val gravarButton: Button = findViewById(R.id.gravarButton)
+        val retornarButton: Button = findViewById(R.id.retornarButton)
 
         gravarButton.setOnClickListener {
             val aparelho = aparelhoEditText.text.toString()
@@ -28,6 +30,12 @@ class ConfigurarActivity : AppCompatActivity() {
             // Limpar os campos de texto após a gravação
             aparelhoEditText.text.clear()
             temporizadorEditText.text.clear()
+        }
+
+        retornarButton.setOnClickListener {
+            val intent = Intent(this, MainActivity::class.java)
+            startActivity(intent)
+            finish() // Encerra a atividade atual (ConfigurarActivity)
         }
     }
 }

@@ -11,16 +11,26 @@ class ConfiguracoesActivity : AppCompatActivity() {
         super.onCreate(savedInstanceState)
         setContentView(R.layout.activity_configuracoes)
 
-        val configurarButton: Button = findViewById(R.id.configurarButton)
         val ligaDesligaButton: Button = findViewById(R.id.ligaDesligaButton)
+        val configurarButton: Button = findViewById(R.id.configurarButton)
         val retornarButton: Button = findViewById(R.id.retornarButton)
 
-        retornarButton.setOnClickListener {
-            // Lógica para gravar os dados do usuário na tabela de usuários
-            // após a gravação, retorne para a tela de login (MainActivity)
+        ligaDesligaButton.setOnClickListener {
             val intent = Intent(this, MainActivity::class.java)
             startActivity(intent)
-            finish() // Encerra a atividade atual (CadastroUsuarioActivity)
+            finish() // Encerra a atividade atual (ConfiguracoesActivity)
+        }
+
+        configurarButton.setOnClickListener {
+            val intent = Intent(this, ConfigurarActivity::class.java)
+            startActivity(intent)
+            finish() // Encerra a atividade atual (ConfiguracoesActivity)
+        }
+
+        retornarButton.setOnClickListener {
+            val intent = Intent(this, MainActivity::class.java)
+            startActivity(intent)
+            finish() // Encerra a atividade atual (ConfiguracoesActivity)
         }
     }
 }

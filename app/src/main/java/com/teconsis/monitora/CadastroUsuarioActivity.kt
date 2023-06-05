@@ -12,8 +12,9 @@ class CadastroUsuarioActivity : AppCompatActivity() {
         setContentView(R.layout.activity_cadastro_usuario)
 
         val gravarButton: Button = findViewById(R.id.gravarButton)
+        val voltarButton: Button = findViewById(R.id.retornarButton)
 
-        gravarButton.setOnClickListener {
+        voltarButton.setOnClickListener {
             // Lógica para gravar os dados do usuário na tabela de usuários
             // após a gravação, retorne para a tela de login (MainActivity)
             val intent = Intent(this, MainActivity::class.java)
