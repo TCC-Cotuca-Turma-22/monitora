@@ -30,9 +30,7 @@ class MainActivity : AppCompatActivity() {
             val email = emailEditText.text.toString()
             val password = passwordEditText.text.toString()
 
-            // remover comentários e ajustar para executar no real //
             if (validateLogin(email, password)) {
-                // Dados de login válidos, realizar a autenticação no servidor SQLServer
                 if (!authenticateUser(email, password, this)) {
                     val intent = Intent(this, ConfiguracoesActivity::class.java)
                     startActivity(intent)
@@ -59,30 +57,25 @@ class MainActivity : AppCompatActivity() {
         return emailPattern.matcher(email).matches() && password.isNotEmpty()
     }
 
-    private fun authenticateUser(email: String, password: String, context: Context) : Boolean {
+    private fun authenticateUser(email: String, password: String, context: Context): Boolean {
         val databaseHelper = DatabaseHelper(context) // Substitua 'context' pela instância do contexto apropriada
         val readableDatabase = databaseHelper.readableDatabase
 
         try {
             // Resto do código para autenticar o usuário
-            // Exemplo: consultas, verificações, etc.
             // Você deve retornar o resultado da autenticação aqui
-            // Por exemplo: return autenticado
-             "Usuário autenticado"
-
+            println("Usuário autenticado")
+            return true
         } catch (e: Exception) {
             println("Erro ao autenticar usuário: ${e.message}")
         } finally {
-
             // Agora você pode realizar operações no banco de dados usando 'readableDatabase'
             // Lembre-se de fechar o banco de dados quando terminar
-
             readableDatabase.close()
             databaseHelper.close()
         }
         return false
     }
-
-
 }
+
 
