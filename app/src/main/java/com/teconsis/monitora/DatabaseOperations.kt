@@ -41,5 +41,24 @@ class DatabaseOperations(private val databaseManager: DatabaseManager) {
 
         return false
     }
+
+    fun addUser(email: String, password: String): Boolean {
+        val query = "INSERT INTO users (email, password) VALUES (?, ?)"
+        val connection: Connection? = databaseManager.getConnection()
+
+        try {
+            val statement: PreparedStatement = connection?.prepareStatement(query) ?: return false
+            statement.setString(1, email)
+            statement.setString(2, password)
+
+            val rowsAffected = statement.executeUpdate()
+
+            return rowsAffected > 0
+        } catch (e: SQLException) {
+            println("Erro ao adicionar usuário: ${e.message}")
+        }
+
+        return false
+    }
     // Adicione mais métodos para outras operações no banco de dados, como inserção, atualização, etc.
 }
