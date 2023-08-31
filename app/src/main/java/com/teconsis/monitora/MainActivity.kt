@@ -4,6 +4,7 @@ import android.content.Context
 import android.content.Intent
 import android.os.Bundle
 import android.util.Patterns
+import android.view.View
 import android.widget.Button
 import android.widget.EditText
 import android.widget.TextView
@@ -76,6 +77,12 @@ class MainActivity : AppCompatActivity() {
         }
         return false
     }
+
+    fun openCadastroUsuario(view: View) {
+        val intent = Intent(this, CadastroUsuarioActivity::class.java)
+        startActivity(intent)
+    }
+
 }
 
 
