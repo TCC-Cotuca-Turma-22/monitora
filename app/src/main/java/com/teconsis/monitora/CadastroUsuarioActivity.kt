@@ -2,18 +2,15 @@ package com.teconsis.monitora
 
 import android.content.Intent
 import android.os.Bundle
-import android.widget.ArrayAdapter
 import android.widget.Button
 import android.widget.EditText
-import android.widget.ListView
 import android.widget.Toast
 import androidx.appcompat.app.AppCompatActivity
-import androidx.recyclerview.widget.RecyclerView
+import com.google.gson.Gson
 
 class CadastroUsuarioActivity : AppCompatActivity() {
 
     private lateinit var databaseHelper: DatabaseHelper
-    private lateinit var userListView: ListView
     private lateinit var showUsersButton: Button
     private lateinit var emailEditText: EditText
     private lateinit var passwordEditText: EditText
@@ -51,16 +48,21 @@ class CadastroUsuarioActivity : AppCompatActivity() {
 
         }
 
-        userListView = findViewById(R.id.userListView)
         showUsersButton = findViewById(R.id.showUsersButton)
 
         showUsersButton.setOnClickListener {
             // Chame o método getAllUsers
             val userList = databaseHelper.getAllUsers()
 
-            // Crie um adapter para exibir a lista de usuários no ListView
-            val adapter = ArrayAdapter(this, android.R.layout.simple_list_item_1, userList)
-            userListView.adapter = adapter
+            // Converte a lista de usuários em JSON
+            val gson = Gson()
+            val userListJson = gson.toJson(userList)
+
+            // Crie uma Intent para iniciar a ListaUsuariosActivity e passe o JSON como um extra
+            val intent = Intent(this, ListaUsuariosActivity::class.java)
+            intent.putExtra("userListJson", userListJson)
+            startActivity(intent)
         }
+
     }
 }

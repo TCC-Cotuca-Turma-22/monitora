@@ -80,12 +80,6 @@ class MainActivity : AppCompatActivity() {
         }
         return false
     }
-
-    fun openCadastroUsuario(view: View) {
-        val intent = Intent(this, CadastroUsuarioActivity::class.java)
-        startActivity(intent)
-    }
-
 }
 
 
