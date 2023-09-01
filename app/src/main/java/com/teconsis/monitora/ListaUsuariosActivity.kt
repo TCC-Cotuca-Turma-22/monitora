@@ -1,8 +1,10 @@
 package com.teconsis.monitora
 
+import android.content.Intent
 import androidx.appcompat.app.AppCompatActivity
 import android.os.Bundle
 import android.widget.ArrayAdapter
+import android.widget.Button
 import android.widget.ListView
 import com.google.firebase.crashlytics.buildtools.reloc.com.google.common.reflect.TypeToken
 import com.google.gson.Gson
@@ -14,6 +16,14 @@ class ListaUsuariosActivity : AppCompatActivity() {
 
         val userListJson = intent.getStringExtra("userListJson")
         val userListView = findViewById<ListView>(R.id.userListView)
+        val voltarButton: Button = findViewById(R.id.returnButton)
+
+        voltarButton.setOnClickListener {
+            val intent = Intent(this, MainActivity::class.java)
+            startActivity(intent)
+            finish() // Encerra a atividade atual (CadastroUsuarioActivity)
+        }
+
 
         if (userListJson != null) {
             // Converte o JSON de volta para a lista de usuários
