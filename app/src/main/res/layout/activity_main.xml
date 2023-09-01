@@ -46,7 +46,8 @@
         android:layout_alignParentEnd="true"
         android:layout_marginTop="36dp"
         android:layout_marginEnd="21dp"
-        android:text="Novo" />
+        android:text="Novo"
+        android:onClick="openCadastroUsuario"/>
 
     <TextView
         android:id="@+id/forgotPasswordLink"
@@ -56,7 +57,9 @@
         android:layout_centerHorizontal="true"
         android:layout_marginBottom="-211dp"
         android:text="Esqueceu a senha?"
-        android:textColor="#0000FF" />
+        android:textColor="#FFFFFFFF"
+        android:clickable="true"/>
+
 
     <Button
         android:id="@+id/loginButton"
