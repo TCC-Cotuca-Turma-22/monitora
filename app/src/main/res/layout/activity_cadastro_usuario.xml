@@ -6,29 +6,6 @@
     android:background="@drawable/fundo"
     tools:context=".CadastroUsuarioActivity">
 
-    <Button
-        android:id="@+id/gravarButton"
-        android:layout_width="102dp"
-        android:layout_height="58dp"
-        android:layout_alignParentStart="true"
-        android:layout_alignParentBottom="true"
-        android:layout_marginStart="47dp"
-        android:layout_marginEnd="16dp"
-        android:layout_marginBottom="181dp"
-        android:text="Gravar" />
-
-    <Button
-        android:id="@+id/retornarButton"
-        android:layout_width="102dp"
-        android:layout_height="wrap_content"
-        android:layout_alignParentStart="true"
-        android:layout_alignParentEnd="true"
-        android:layout_alignParentBottom="true"
-        android:layout_marginStart="222dp"
-        android:layout_marginEnd="80dp"
-        android:layout_marginBottom="188dp"
-        android:text="Voltar" />
-
     <EditText
         android:id="@+id/emailEditText"
         android:layout_width="379dp"
@@ -36,9 +13,9 @@
         android:layout_alignParentStart="true"
         android:layout_alignParentTop="true"
         android:layout_alignParentEnd="true"
-        android:layout_marginStart="15dp"
+        android:layout_marginStart="16dp"
         android:layout_marginTop="310dp"
-        android:layout_marginEnd="17dp"
+        android:layout_marginEnd="16dp"
         android:hint="Digite seu Email"
         android:inputType="textEmailAddress"
         android:textColor="@color/white"
@@ -46,31 +23,49 @@
 
     <EditText
         android:id="@+id/passwordEditText"
-        android:layout_width="378dp"
-        android:layout_height="48dp"
+        android:layout_width="379dp"
+        android:layout_height="51dp"
         android:layout_below="@+id/emailEditText"
         android:layout_alignParentStart="true"
         android:layout_alignParentTop="true"
         android:layout_alignParentEnd="true"
         android:layout_centerVertical="true"
-        android:layout_marginStart="17dp"
-        android:layout_marginTop="377dp"
-        android:layout_marginEnd="15dp"
+        android:layout_marginStart="16dp"
+        android:layout_marginTop="370dp"
+        android:layout_marginEnd="16dp"
         android:hint="Digite uma Senha"
         android:inputType="textPassword"
         android:textColor="@color/white"
         android:textColorHint="#FBFAFA" />
 
     <Button
-        android:id="@+id/showUsersButton"
-        android:layout_width="100dp"
-        android:layout_height="105dp"
+        android:id="@+id/gravarButton"
+        android:layout_width="120dp"
+        android:layout_height="60dp"
         android:layout_alignParentStart="true"
-        android:layout_alignParentEnd="true"
         android:layout_alignParentBottom="true"
-        android:layout_marginStart="196dp"
-        android:layout_marginEnd="100dp"
-        android:layout_marginBottom="43dp"
-        android:text="Mostrar Usuários" />
+        android:layout_marginStart="40dp"
+        android:layout_marginBottom="260dp"
+        android:text="Gravar" />
+
+    <Button
+        android:id="@+id/retornarButton"
+        android:layout_width="120dp"
+        android:layout_height="60dp"
+        android:layout_alignParentStart="true"
+        android:layout_alignParentBottom="true"
+        android:layout_marginStart="240dp"
+        android:layout_marginBottom="260dp"
+        android:text="Voltar" />
+
+    <Button
+        android:id="@+id/showUsersButton"
+        android:layout_width="120dp"
+        android:layout_height="60dp"
+        android:layout_alignParentBottom="true"
+        android:layout_marginStart="140dp"
+        android:layout_marginEnd="130dp"
+        android:layout_marginBottom="150dp"
+        android:text="Usuários" />
 
 </RelativeLayout>
