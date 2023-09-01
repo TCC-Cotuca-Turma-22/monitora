@@ -13,6 +13,7 @@ import androidx.appcompat.app.AppCompatActivity
 
 class MainActivity : AppCompatActivity() {
 
+    private lateinit var databaseHelper: DatabaseHelper
     private lateinit var emailEditText: EditText
     private lateinit var passwordEditText: EditText
 
@@ -26,13 +27,14 @@ class MainActivity : AppCompatActivity() {
         val novoButton: Button = findViewById(R.id.novoButton)
         val forgotPasswordLink: TextView = findViewById(R.id.forgotPasswordLink)
 
-        loginButton.setOnClickListener {
+        databaseHelper = DatabaseHelper(this)
 
+        loginButton.setOnClickListener {
             val email = emailEditText.text.toString()
             val password = passwordEditText.text.toString()
 
             if (validateLogin(email, password)) {
-                if (!authenticateUser(email, password, this)) {
+                if (authenticateUser(email, password)) { // Altere aqui
                     val intent = Intent(this, ConfiguracoesActivity::class.java)
                     startActivity(intent)
                 } else {
@@ -58,22 +60,23 @@ class MainActivity : AppCompatActivity() {
         return emailPattern.matcher(email).matches() && password.isNotEmpty()
     }
 
-    private fun authenticateUser(email: String, password: String, context: Context): Boolean {
-        val databaseHelper = DatabaseHelper(context) // Substitua 'context' pela instância do contexto apropriada
+    private fun authenticateUser(email: String, password: String): Boolean {
         val readableDatabase = databaseHelper.readableDatabase
 
         try {
-            // Resto do código para autenticar o usuário
-            // Você deve retornar o resultado da autenticação aqui
-            println("Usuário autenticado")
-            return true
+            // Consulta SQL para verificar se o email e senha correspondem a um usuário
+            val query = "SELECT COUNT(*) FROM ${DatabaseHelper.TABLE_USERS} WHERE " +
+                    "${DatabaseHelper.COLUMN_EMAIL} = ? AND ${DatabaseHelper.COLUMN_PASSWORD} = ?"
+
+            val cursor = readableDatabase.rawQuery(query, arrayOf(email, password))
+            cursor.moveToFirst()
+
+            val count = cursor.getInt(0)
+            return count > 0 // Se count for maior que 0, o usuário está autenticado
         } catch (e: Exception) {
             println("Erro ao autenticar usuário: ${e.message}")
         } finally {
-            // Agora você pode realizar operações no banco de dados usando 'readableDatabase'
-            // Lembre-se de fechar o banco de dados quando terminar
             readableDatabase.close()
-            databaseHelper.close()
         }
         return false
     }
