@@ -48,16 +48,18 @@ class AtualizacaoUsuarioActivity : AppCompatActivity() {
                 Toast.makeText(this, "Dados inválidos!", Toast.LENGTH_SHORT).show()
             }
         }
+
+        val voltarButton: Button = findViewById(R.id.configButton)
+        voltarButton.setOnClickListener {
+            // Lógica para gravar os dados do usuário na tabela de usuários
+            // após a gravação, retorne para a tela de login (MainActivity)
+            val intent = Intent(this, ConfiguracoesActivity::class.java)
+            startActivity(intent)
+            finish() // Encerra a atividade atual (CadastroUsuarioActivity)
+        }
     }
 
     private fun validateInput(loggedInUserId: Long, email: String, password: String): Boolean {
-        val isUserIdValid = loggedInUserId >= 0
-        val isEmailValid = isEmailValid(email)
-        val isPasswordValid = isPasswordValid(password)
-
-        Log.d("Validation", "UserId Valid: $isUserIdValid")
-        Log.d("Validation", "Email Valid: $isEmailValid")
-        Log.d("Validation", "Password Valid: $isPasswordValid")
         return loggedInUserId >= 0 && isEmailValid(email) && isPasswordValid(password)
     }
     private fun isEmailValid(email: String): Boolean {
