@@ -62,4 +62,22 @@ class DatabaseHelper(context: Context) : SQLiteOpenHelper(context, "monitora.db"
 
         return userList
     }
+
+    fun updateUser(id: Long, novoEmail: String, novoPassword: String): Int {
+        val values = ContentValues()
+        if (novoEmail.isEmpty() || novoPassword.isEmpty()) {
+            throw IllegalArgumentException("Novo e-mail e senha não podem estar vazios")
+        }
+        values.put(COLUMN_EMAIL, novoEmail)
+        values.put(COLUMN_PASSWORD, novoPassword)
+
+        val db = writableDatabase
+        return db.update(
+            TABLE_USERS,
+            values,
+            "$COLUMN_ID = ?",
+            arrayOf(id.toString())
+        )
+    }
+
 }
