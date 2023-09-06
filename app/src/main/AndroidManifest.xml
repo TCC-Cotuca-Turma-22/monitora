@@ -17,6 +17,9 @@
             android:name=".ListaUsuariosActivity"
             android:exported="false" />
         <activity
+            android:name=".ListaUsuariosActivity"
+            android:exported="false" />
+        <activity
             android:name=".MainActivity"
             android:exported="true"
             android:theme="@style/Theme.AppCompat.NoActionBar" >
@@ -39,6 +42,19 @@
             android:name=".ConfigurarActivity"
             android:label="Configuração"
             android:theme="@style/Theme.AppCompat.NoActionBar" />
+        <activity
+            android:name=".PerfilUsuarioActivity"
+            android:label="Perfil de usuário"
+            android:theme="@style/Theme.AppCompat.NoActionBar" />
+        <activity
+            android:name=".AtualizacaoUsuarioActivity"
+            android:label="Atualização de usuário"
+            android:theme="@style/Theme.AppCompat.NoActionBar" />
+        <activity
+            android:name=".DatabaseHelper"
+            android:label="Gerencia o banco de dados"
+            android:theme="@style/Theme.AppCompat.NoActionBar" />
+
     </application>
 
 </manifest>

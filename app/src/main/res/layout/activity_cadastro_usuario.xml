@@ -17,9 +17,8 @@
         android:layout_marginTop="310dp"
         android:layout_marginEnd="16dp"
         android:hint="Digite seu Email"
-        android:inputType="textEmailAddress"
-        android:textColor="@color/white"
-        android:textColorHint="#FBF9F9" />
+        android:textColorHint="@color/white"
+        android:inputType="textEmailAddress"/>
 
     <EditText
         android:id="@+id/passwordEditText"
@@ -34,9 +33,8 @@
         android:layout_marginTop="370dp"
         android:layout_marginEnd="16dp"
         android:hint="Digite uma Senha"
-        android:inputType="textPassword"
-        android:textColor="@color/white"
-        android:textColorHint="#FBFAFA" />
+        android:textColorHint="@color/white"
+        android:inputType="textPassword"/>
 
     <Button
         android:id="@+id/gravarButton"

@@ -3,6 +3,7 @@ package com.teconsis.monitora
 import android.content.Context
 import android.content.Intent
 import android.os.Bundle
+import android.util.Log
 import android.util.Patterns
 import android.view.View
 import android.widget.Button
@@ -33,17 +34,17 @@ class MainActivity : AppCompatActivity() {
             val email = emailEditText.text.toString()
             val password = passwordEditText.text.toString()
 
-            if (validateLogin(email, password)) {
-                if (authenticateUser(email, password)) { // Altere aqui
-                    val intent = Intent(this, ConfiguracoesActivity::class.java)
-                    startActivity(intent)
-                } else {
-                    Toast.makeText(this, "Usuário não encontrado.", Toast.LENGTH_SHORT).show()
-                }
+            val loggedInUserId = authenticateUser(email, password)
+
+            if (loggedInUserId != null) {
+                val intent = Intent(this, PerfilUsuarioActivity::class.java)
+                intent.putExtra("loggedInUserId", loggedInUserId)
+                startActivity(intent)
             } else {
-                Toast.makeText(this, "Usuário inválido!", Toast.LENGTH_SHORT).show()
+                Toast.makeText(this, "Usuário não encontrado.", Toast.LENGTH_SHORT).show()
             }
         }
+
 
         novoButton.setOnClickListener {
             val intent = Intent(this, CadastroUsuarioActivity::class.java)
@@ -53,6 +54,23 @@ class MainActivity : AppCompatActivity() {
         forgotPasswordLink.setOnClickListener {
             // Lógica para lidar com a opção "Esqueceu a senha?"
         }
+
+        loginButton.setOnClickListener {
+            val email = emailEditText.text.toString()
+            val password = passwordEditText.text.toString()
+
+            val loggedInUserId = authenticateUser(email, password)
+
+            if (loggedInUserId != null) {
+                val intent = Intent(this, AtualizacaoUsuarioActivity::class.java)
+                intent.putExtra("loggedInUserId", loggedInUserId) // Passa o ID como um extra
+                startActivity(intent)
+                Log.d("Validation", "loggerInUserId é $loggedInUserId")
+            } else {
+                Toast.makeText(this, "Usuário não encontrado.", Toast.LENGTH_SHORT).show()
+            }
+        }
+
     }
 
     private fun validateLogin(email: String, password: String): Boolean {
@@ -60,26 +78,29 @@ class MainActivity : AppCompatActivity() {
         return emailPattern.matcher(email).matches() && password.isNotEmpty()
     }
 
-    private fun authenticateUser(email: String, password: String): Boolean {
+    private fun authenticateUser(email: String, password: String): Long? {
         val readableDatabase = databaseHelper.readableDatabase
 
         try {
             // Consulta SQL para verificar se o email e senha correspondem a um usuário
-            val query = "SELECT COUNT(*) FROM ${DatabaseHelper.TABLE_USERS} WHERE " +
+            val query = "SELECT ${DatabaseHelper.COLUMN_ID} FROM ${DatabaseHelper.TABLE_USERS} WHERE " +
                     "${DatabaseHelper.COLUMN_EMAIL} = ? AND ${DatabaseHelper.COLUMN_PASSWORD} = ?"
 
             val cursor = readableDatabase.rawQuery(query, arrayOf(email, password))
-            cursor.moveToFirst()
 
-            val count = cursor.getInt(0)
-            return count > 0 // Se count for maior que 0, o usuário está autenticado
+            if (cursor.moveToFirst()) {
+                val userId = cursor.getLong(cursor.getColumnIndexOrThrow(DatabaseHelper.COLUMN_ID))
+                return userId // Retorna o ID do usuário logado se a autenticação for bem-sucedida
+            }
         } catch (e: Exception) {
             println("Erro ao autenticar usuário: ${e.message}")
         } finally {
             readableDatabase.close()
         }
-        return false
+
+        return null // Retorna null se a autenticação falhar
     }
+
 }
 
 
