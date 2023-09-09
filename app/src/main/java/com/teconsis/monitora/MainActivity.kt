@@ -11,6 +11,7 @@ import android.widget.EditText
 import android.widget.TextView
 import android.widget.Toast
 import androidx.appcompat.app.AppCompatActivity
+import androidx.core.database.getStringOrNull
 
 class MainActivity : AppCompatActivity() {
 
@@ -29,17 +30,19 @@ class MainActivity : AppCompatActivity() {
         val forgotPasswordLink: TextView = findViewById(R.id.forgotPasswordLink)
 
         databaseHelper = DatabaseHelper(this)
+        databaseHelper.createAdminUser()
 
         loginButton.setOnClickListener {
             val email = emailEditText.text.toString()
             val password = passwordEditText.text.toString()
 
             val loggedInUserId = authenticateUser(email, password)
-
             if (loggedInUserId != null) {
                 val intent = Intent(this, PerfilUsuarioActivity::class.java)
                 intent.putExtra("loggedInUserId", loggedInUserId)
+                intent.putExtra("loggedInUserEmail", email)
                 startActivity(intent)
+
             } else {
                 Toast.makeText(this, "Usuário não encontrado.", Toast.LENGTH_SHORT).show()
             }
@@ -54,23 +57,6 @@ class MainActivity : AppCompatActivity() {
         forgotPasswordLink.setOnClickListener {
             // Lógica para lidar com a opção "Esqueceu a senha?"
         }
-
-        loginButton.setOnClickListener {
-            val email = emailEditText.text.toString()
-            val password = passwordEditText.text.toString()
-
-            val loggedInUserId = authenticateUser(email, password)
-
-            if (loggedInUserId != null) {
-                val intent = Intent(this, AtualizacaoUsuarioActivity::class.java)
-                intent.putExtra("loggedInUserId", loggedInUserId) // Passa o ID como um extra
-                startActivity(intent)
-                Log.d("Validation", "loggerInUserId é $loggedInUserId")
-            } else {
-                Toast.makeText(this, "Usuário não encontrado.", Toast.LENGTH_SHORT).show()
-            }
-        }
-
     }
 
     private fun validateLogin(email: String, password: String): Boolean {
