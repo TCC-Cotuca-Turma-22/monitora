@@ -2,11 +2,11 @@ package com.teconsis.monitora
 
 import android.content.Intent
 import android.os.Bundle
+import android.util.Patterns
 import android.widget.Button
 import android.widget.EditText
 import android.widget.Toast
 import androidx.appcompat.app.AppCompatActivity
-import com.google.gson.Gson
 
 class CadastroUsuarioActivity : AppCompatActivity() {
 
@@ -30,22 +30,38 @@ class CadastroUsuarioActivity : AppCompatActivity() {
             finish() // Encerra a atividade atual (CadastroUsuarioActivity)
         }
 
-
         emailEditText = findViewById(R.id.emailEditText)
         passwordEditText = findViewById(R.id.passwordEditText)
+
+        fun validateCadastro(email: String, password: String): Boolean {
+            val emailPattern = Patterns.EMAIL_ADDRESS
+            return emailPattern.matcher(email).matches() && password.isNotEmpty()
+        }
 
         gravarButton.setOnClickListener {
             val email = emailEditText.text.toString()
             val password = passwordEditText.text.toString()
 
-            try {
-                val userId = databaseHelper.insertUser(email, password)
-                Toast.makeText(this, "Usuário adicionado com sucesso", Toast.LENGTH_SHORT).show()
-            } catch (e: IllegalArgumentException) {
-                Toast.makeText(this, "Erro ao adicionar usuário: ${e.message}", Toast.LENGTH_SHORT)
-                    .show()
+            if (validateCadastro(email, password)) {
+                try {
+                    databaseHelper.insertUser(email, password)
+                    Toast.makeText(this, "Usuário adicionado com sucesso", Toast.LENGTH_SHORT)
+                        .show()
+                } catch (e: IllegalArgumentException) {
+                    Toast.makeText(
+                        this,
+                        "Erro ao adicionar usuário: ${e.message}",
+                        Toast.LENGTH_SHORT
+                    )
+                        .show()
+                }
+            } else {
+                Toast.makeText(
+                    this,
+                    "Por favor, insira um endereço de e-mail válido e uma senha não vazia.",
+                    Toast.LENGTH_SHORT
+                ).show()
             }
-
         }
 
     }

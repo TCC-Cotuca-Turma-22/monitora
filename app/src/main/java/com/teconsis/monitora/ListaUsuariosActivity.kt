@@ -33,7 +33,6 @@ class ListaUsuariosActivity : AppCompatActivity() {
         // Pega o email do usuário logado
         val userIdEditTextContainer = findViewById<LinearLayout>(R.id.userIdEditTextContainer)
 
-
         voltarButton.setOnClickListener {
             val intent = Intent(this, MainActivity::class.java)
             startActivity(intent)
@@ -74,12 +73,12 @@ class ListaUsuariosActivity : AppCompatActivity() {
 
             val userIdEditText = findViewById<EditText>(R.id.userIdEditText)
             val userIdToDelete = userIdEditText.text.toString().toLongOrNull()
-            val loggedInUserEmail = intent.getStringExtra("loggedInUserEmail")
+            val userEmail = intent.getStringExtra("loggedInUserEmail")
 
             try {
                 if (userIdToDelete != null) {
                     // Chama a função para excluir o usuário do DatabaseHelper
-                    val rowsDeleted = loggedInUserEmail?.let { it1 ->
+                    val rowsDeleted = userEmail?.let { it1 ->
                         databaseHelper.deleteUserById(it1, userIdToDelete)
                     }
 

@@ -2,7 +2,6 @@ package com.teconsis.monitora
 
 import android.content.ContentValues
 import android.content.Context
-import android.database.Cursor
 import android.database.sqlite.SQLiteDatabase
 import android.database.sqlite.SQLiteOpenHelper
 import android.util.Log
@@ -56,9 +55,9 @@ class DatabaseHelper(context: Context) : SQLiteOpenHelper(context, "monitora.db"
             throw IllegalArgumentException("Email e senha não podem estar vazios")
         }
 
-        // Verifique se o email já existe no banco de dados
+        // Verifica se o email já existe no banco de dados
         if (isEmailExists(email)) {
-            throw IllegalArgumentException("este email já está em uso")
+            throw IllegalArgumentException("esse email já está em uso")
         }
 
         values.put(COLUMN_EMAIL, email)
@@ -71,15 +70,6 @@ class DatabaseHelper(context: Context) : SQLiteOpenHelper(context, "monitora.db"
     private fun isEmailExists(email: String): Boolean {
         val db = readableDatabase
         val query = "SELECT COUNT(*) FROM $TABLE_USERS WHERE $COLUMN_EMAIL = ?"
-
-        // Verifique se o email é diferente do email do usuário administrador
-        val isAdminEmail = "admin@example.com"
-        val args = if (email == isAdminEmail) {
-            arrayOf()
-        } else {
-            arrayOf(email)
-        }
-
         val cursor = db.rawQuery(query, arrayOf(email))
 
         cursor.use {
@@ -88,7 +78,6 @@ class DatabaseHelper(context: Context) : SQLiteOpenHelper(context, "monitora.db"
                 return count > 0
             }
         }
-
         return false
     }
 
@@ -110,10 +99,10 @@ class DatabaseHelper(context: Context) : SQLiteOpenHelper(context, "monitora.db"
                 userList.add(user)
             }
         } catch (e: Exception) {
+            Log.e("TAG", "Erro ao recuperar todos os usuários: ${e.message}")
         } finally {
             cursor.close()
         }
-
         return userList
     }
 
@@ -158,7 +147,6 @@ class DatabaseHelper(context: Context) : SQLiteOpenHelper(context, "monitora.db"
         } finally {
             cursor.close()
         }
-
         return null // Retorna null se a função não for encontrada
     }
 }
