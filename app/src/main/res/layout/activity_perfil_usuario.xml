@@ -13,7 +13,7 @@
         android:layout_alignParentStart="true"
         android:layout_alignParentBottom="true"
         android:layout_marginStart="124dp"
-        android:layout_marginBottom="285dp"
+        android:layout_marginBottom="300dp"
         android:text="Atualizar Perfil" />
 
     <Button
@@ -23,7 +23,7 @@
         android:layout_alignParentStart="true"
         android:layout_alignParentBottom="true"
         android:layout_marginStart="124dp"
-        android:layout_marginBottom="201dp"
+        android:layout_marginBottom="216dp"
         android:text="Configuração" />
 
     <Button
@@ -32,7 +32,7 @@
         android:layout_height="50dp"
         android:layout_alignParentBottom="true"
         android:layout_marginStart="124dp"
-        android:layout_marginBottom="121dp"
+        android:layout_marginBottom="136dp"
         android:text="Listar Usuários" />
 
 </RelativeLayout>

@@ -38,16 +38,17 @@ class MainActivity : AppCompatActivity() {
 
             val loggedInUserId = authenticateUser(email, password)
             if (loggedInUserId != null) {
-                val intent = Intent(this, PerfilUsuarioActivity::class.java)
-                intent.putExtra("loggedInUserId", loggedInUserId)
-                intent.putExtra("loggedInUserEmail", email)
-                startActivity(intent)
+                val intentPerfil = Intent(this, PerfilUsuarioActivity::class.java)
+                intentPerfil.putExtra("loggedInUserId", loggedInUserId)
+                intentPerfil.putExtra("loggedInUserEmail", email)
+                startActivity(intentPerfil)
+                val intentAtualizacao = Intent(this, AtualizacaoUsuarioActivity::class.java)
+                intentAtualizacao.putExtra("loggedInUserId", loggedInUserId)
 
             } else {
                 Toast.makeText(this, "Usuário não encontrado.", Toast.LENGTH_SHORT).show()
             }
         }
-
 
         novoButton.setOnClickListener {
             val intent = Intent(this, CadastroUsuarioActivity::class.java)

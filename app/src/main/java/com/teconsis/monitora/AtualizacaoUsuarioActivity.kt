@@ -27,7 +27,7 @@ class AtualizacaoUsuarioActivity : AppCompatActivity() {
 
         val loggedInUserId = intent.getLongExtra("loggedInUserId", -1)
 
-        Log.d("Validation", "loggerInUserId é $loggedInUserId")
+        Log.d("Validation", "loggedInUserId é $loggedInUserId")
 
         atualizarButton.setOnClickListener {
             val novoEmail = emailEditText.text.toString()
