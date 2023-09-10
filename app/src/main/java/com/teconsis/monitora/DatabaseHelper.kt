@@ -5,7 +5,6 @@ import android.content.Context
 import android.database.sqlite.SQLiteDatabase
 import android.database.sqlite.SQLiteOpenHelper
 import android.util.Log
-import android.widget.Toast
 
 class DatabaseHelper(context: Context) : SQLiteOpenHelper(context, "monitora.db", null, 1) {
 
@@ -14,16 +13,36 @@ class DatabaseHelper(context: Context) : SQLiteOpenHelper(context, "monitora.db"
         const val COLUMN_ID = "id"
         const val COLUMN_EMAIL = "email"
         const val COLUMN_PASSWORD = "password"
+        const val COLUMN_ROLE = "role"
     }
 
     override fun onCreate(db: SQLiteDatabase?) {
         val createUserTableQuery = "CREATE TABLE IF NOT EXISTS $TABLE_USERS (" +
                 "$COLUMN_ID INTEGER PRIMARY KEY AUTOINCREMENT," +
                 "$COLUMN_EMAIL TEXT UNIQUE," +
-                "$COLUMN_PASSWORD TEXT)"
+                "$COLUMN_PASSWORD TEXT," +
+                "$COLUMN_ROLE TEXT)"
 
         db?.execSQL(createUserTableQuery)
+    }
 
+    fun createAdminUser() {
+        val adminEmail = "admin@admin.com"
+        val adminPassword = "admin"
+        val adminRole = "admin"
+
+        val db = writableDatabase
+
+        // Verifique se o usuário administrador já existe
+        if (!isEmailExists(adminEmail)) {
+            val values = ContentValues()
+
+            values.put(COLUMN_EMAIL, adminEmail)
+            values.put(COLUMN_PASSWORD, adminPassword)
+            values.put(COLUMN_ROLE, adminRole)
+
+            db.insert(TABLE_USERS, null, values)
+        }
     }
 
     override fun onUpgrade(db: SQLiteDatabase?, oldVersion: Int, newVersion: Int) {
@@ -35,11 +54,31 @@ class DatabaseHelper(context: Context) : SQLiteOpenHelper(context, "monitora.db"
         if (email.isEmpty() || password.isEmpty()) {
             throw IllegalArgumentException("Email e senha não podem estar vazios")
         }
+
+        // Verifica se o email já existe no banco de dados
+        if (isEmailExists(email)) {
+            throw IllegalArgumentException("esse email já está em uso")
+        }
+
         values.put(COLUMN_EMAIL, email)
         values.put(COLUMN_PASSWORD, password)
 
         val db = writableDatabase
         return db.insert(TABLE_USERS, null, values)
+    }
+
+    private fun isEmailExists(email: String): Boolean {
+        val db = readableDatabase
+        val query = "SELECT COUNT(*) FROM $TABLE_USERS WHERE $COLUMN_EMAIL = ?"
+        val cursor = db.rawQuery(query, arrayOf(email))
+
+        cursor.use {
+            if (it.moveToFirst()) {
+                val count = it.getInt(0)
+                return count > 0
+            }
+        }
+        return false
     }
 
     fun getAllUsers(): List<User> {
@@ -49,17 +88,21 @@ class DatabaseHelper(context: Context) : SQLiteOpenHelper(context, "monitora.db"
         val query = "SELECT * FROM $TABLE_USERS"
 
         val cursor = db.rawQuery(query, null)
-        cursor.use {
-            while (it.moveToNext()) {
-                val id = it.getLong(it.getColumnIndexOrThrow(COLUMN_ID))
-                val email = it.getString(it.getColumnIndexOrThrow(COLUMN_EMAIL))
-                val password = it.getString(it.getColumnIndexOrThrow(COLUMN_PASSWORD))
+
+        try {
+            while (cursor.moveToNext()) {
+                val id = cursor.getLong(cursor.getColumnIndexOrThrow(COLUMN_ID))
+                val email = cursor.getString(cursor.getColumnIndexOrThrow(COLUMN_EMAIL))
+                val password = cursor.getString(cursor.getColumnIndexOrThrow(COLUMN_PASSWORD))
 
                 val user = User(id, email, password)
                 userList.add(user)
             }
+        } catch (e: Exception) {
+            Log.e("TAG", "Erro ao recuperar todos os usuários: ${e.message}")
+        } finally {
+            cursor.close()
         }
-
         return userList
     }
 
@@ -80,4 +123,30 @@ class DatabaseHelper(context: Context) : SQLiteOpenHelper(context, "monitora.db"
         )
     }
 
+    fun deleteUserById(adminEmail: String, userId: Long): Int {
+        val adminRole = getRoleUser(adminEmail)
+
+        if (adminRole == "admin") {
+            val db = writableDatabase
+            return db.delete(TABLE_USERS, "$COLUMN_ID = ?", arrayOf(userId.toString()))
+        } else {
+            // O usuário logado não é um administrador, não permita a exclusão de usuários
+            throw SecurityException("Apenas administradores podem excluir usuários")
+        }
+    }
+
+    fun getRoleUser(email: String): String? {
+        val db = readableDatabase
+        val query = "SELECT $COLUMN_ROLE FROM $TABLE_USERS WHERE $COLUMN_EMAIL = ?"
+        val cursor = db.rawQuery(query, arrayOf(email))
+
+        try {
+            if (cursor.moveToFirst()) {
+                return cursor.getString(cursor.getColumnIndexOrThrow(COLUMN_ROLE))
+            }
+        } finally {
+            cursor.close()
+        }
+        return null // Retorna null se a função não for encontrada
+    }
 }

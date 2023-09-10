@@ -39,7 +39,7 @@
     <Button
         android:id="@+id/gravarButton"
         android:layout_width="120dp"
-        android:layout_height="60dp"
+        android:layout_height="50dp"
         android:layout_alignParentStart="true"
         android:layout_alignParentBottom="true"
         android:layout_marginStart="40dp"
@@ -49,21 +49,11 @@
     <Button
         android:id="@+id/retornarButton"
         android:layout_width="120dp"
-        android:layout_height="60dp"
+        android:layout_height="50dp"
         android:layout_alignParentStart="true"
         android:layout_alignParentBottom="true"
         android:layout_marginStart="240dp"
         android:layout_marginBottom="260dp"
         android:text="Voltar" />
-
-    <Button
-        android:id="@+id/showUsersButton"
-        android:layout_width="120dp"
-        android:layout_height="60dp"
-        android:layout_alignParentBottom="true"
-        android:layout_marginStart="140dp"
-        android:layout_marginEnd="130dp"
-        android:layout_marginBottom="150dp"
-        android:text="Usuários" />
 
 </RelativeLayout>

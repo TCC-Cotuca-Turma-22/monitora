@@ -37,25 +37,26 @@
 
     <Button
         android:id="@+id/gravarButton"
-        android:layout_width="102dp"
-        android:layout_height="58dp"
+        android:layout_width="100dp"
+        android:layout_height="50dp"
         android:layout_alignParentStart="true"
+        android:layout_alignParentEnd="true"
         android:layout_alignParentBottom="true"
-        android:layout_marginStart="47dp"
-        android:layout_marginEnd="16dp"
-        android:layout_marginBottom="181dp"
+        android:layout_marginStart="78dp"
+        android:layout_marginEnd="75dp"
+        android:layout_marginBottom="232dp"
         android:text="Gravar" />
 
     <Button
         android:id="@+id/retornarButton"
-        android:layout_width="109dp"
-        android:layout_height="wrap_content"
+        android:layout_width="100dp"
+        android:layout_height="50dp"
         android:layout_alignParentStart="true"
         android:layout_alignParentEnd="true"
         android:layout_alignParentBottom="true"
-        android:layout_marginStart="222dp"
-        android:layout_marginEnd="80dp"
-        android:layout_marginBottom="188dp"
+        android:layout_marginStart="78dp"
+        android:layout_marginEnd="75dp"
+        android:layout_marginBottom="157dp"
         android:text="Voltar" />
 
 </RelativeLayout>
