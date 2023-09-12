@@ -149,4 +149,24 @@ class DatabaseHelper(context: Context) : SQLiteOpenHelper(context, "monitora.db"
         }
         return null // Retorna null se a função não for encontrada
     }
+
+    fun authenticateUser(email: String, password: String): Long? {
+        var userId: Long? = null
+
+        val query =
+            "SELECT ${DatabaseHelper.COLUMN_ID} FROM ${DatabaseHelper.TABLE_USERS} WHERE " +
+                    "${DatabaseHelper.COLUMN_EMAIL} = ? AND ${DatabaseHelper.COLUMN_PASSWORD} = ?"
+
+        val cursor = readableDatabase.rawQuery(query, arrayOf(email, password))
+
+        if (cursor.moveToFirst()) {
+            userId = cursor.getLong(cursor.getColumnIndexOrThrow(DatabaseHelper.COLUMN_ID))
+        }
+
+        cursor.close()
+        readableDatabase.close()
+
+        return userId
+    }
+
 }
