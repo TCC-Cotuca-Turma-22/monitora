@@ -2,6 +2,7 @@ package com.teconsis.monitora
 
 import android.content.Intent
 import android.os.Bundle
+import android.util.Log
 import android.view.View
 import android.widget.ArrayAdapter
 import android.widget.Button
@@ -29,12 +30,13 @@ class ListaUsuariosActivity : AppCompatActivity() {
         val voltarButton: Button = findViewById(R.id.returnButton)
         val deleteButton: Button = findViewById(R.id.deleteButton)
         val loggedInUserEmail = intent.getStringExtra("loggedInUserEmail")
+        val loggedInUserId = intent.getLongExtra("loggedInUserId", -1)
         val loggedInUserRole = loggedInUserEmail?.let { databaseHelper.getRoleUser(it) }
         // Pega o email do usuário logado
         val userIdEditTextContainer = findViewById<LinearLayout>(R.id.userIdEditTextContainer)
 
         voltarButton.setOnClickListener {
-            val intent = Intent(this, MainActivity::class.java)
+            val intent = Intent(this, PerfilUsuarioActivity::class.java)
             startActivity(intent)
             finish()
         }

@@ -2,6 +2,7 @@ package com.teconsis.monitora
 
 import android.content.Intent
 import android.os.Bundle
+import android.util.Log
 import android.widget.Button
 import androidx.appcompat.app.AppCompatActivity
 import com.google.gson.Gson
@@ -32,6 +33,8 @@ class PerfilUsuarioActivity : AppCompatActivity() {
 
         databaseHelper = DatabaseHelper(this)
         showUsersButton = findViewById(R.id.showUsersButton)
+        val loggedInUserEmail = intent.getStringExtra("loggedInUserEmail")
+        val loggedInUserId = intent.getLongExtra("loggedInUserId", -1)
 
         showUsersButton.setOnClickListener {
             // Chame o método getAllUsers
@@ -40,13 +43,15 @@ class PerfilUsuarioActivity : AppCompatActivity() {
             // Converte a lista de usuários em JSON
             val gson = Gson()
             val userListJson = gson.toJson(userList)
-            val loggedInUserEmail = intent.getStringExtra("loggedInUserEmail")
-
             // Crie uma Intent para iniciar a ListaUsuariosActivity e passe o JSON como um extra
             val intent = Intent(this, ListaUsuariosActivity::class.java)
             intent.putExtra("userListJson", userListJson)
             intent.putExtra("loggedInUserEmail", loggedInUserEmail)
+            intent.putExtra("loggedInUserId",loggedInUserId)
             startActivity(intent)
         }
+        val intentAtualizacao = Intent(this, AtualizacaoUsuarioActivity::class.java)
+        intentAtualizacao.putExtra("loggedInUserId", loggedInUserId)
+        //startActivity(intentAtualizacao)
     }
 }

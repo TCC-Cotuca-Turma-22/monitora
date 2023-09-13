@@ -2,6 +2,7 @@ package com.teconsis.monitora
 
 import android.content.Intent
 import android.os.Bundle
+import android.util.Log
 import android.widget.Button
 import android.widget.EditText
 import android.widget.Toast
@@ -25,6 +26,7 @@ class AtualizacaoUsuarioActivity : AppCompatActivity() {
         val atualizarButton: Button = findViewById(R.id.atualizarButton)
 
         val loggedInUserId = intent.getLongExtra("loggedInUserId", -1)
+        Log.d("loggedInUserIdAtu", loggedInUserId.toString())
 
         atualizarButton.setOnClickListener {
             val novoEmail = emailEditText.text.toString()
@@ -32,7 +34,6 @@ class AtualizacaoUsuarioActivity : AppCompatActivity() {
 
             if (validateInput(loggedInUserId, novoEmail, novaPassword)) {
                 // Obtenha o ID do usuário que deseja atualizar (você precisa implementar isso)
-
                 try {
                     databaseHelper.updateUser(loggedInUserId, novoEmail, novaPassword)
                     Toast.makeText(this, "Usuário atualizado com sucesso", Toast.LENGTH_SHORT)
