@@ -1,8 +1,8 @@
 package com.teconsis.monitora
 
+import android.content.Context
 import android.content.Intent
 import android.os.Bundle
-import android.util.Log
 import android.util.Patterns
 import android.widget.Button
 import android.widget.EditText
@@ -35,11 +35,19 @@ class MainActivity : AppCompatActivity() {
 
             if (validateLogin(email, password)) {
                 val loggedInUserId = databaseHelper.authenticateUser(email, password)
+
                 if (loggedInUserId != null) {
-                    val intentPerfil = Intent(this, PerfilUsuarioActivity::class.java)
-                    intentPerfil.putExtra("loggedInUserId", loggedInUserId)
-                    intentPerfil.putExtra("loggedInUserEmail", email)
-                    startActivity(intentPerfil)
+                    val sharedPreferences =
+                        getSharedPreferences("mySharedPreferences", Context.MODE_PRIVATE)
+                    val editor = sharedPreferences.edit()
+                    editor.putLong("loggedInUserId", loggedInUserId)
+                    editor.putString("loggedInUserEmail", email)
+                    editor.apply()
+                }
+
+                if (loggedInUserId != null) {
+                    val intent = Intent(this, PerfilUsuarioActivity::class.java)
+                    startActivity(intent)
                 } else {
                     Toast.makeText(this, "Usuário não encontrado.", Toast.LENGTH_SHORT).show()
                 }
