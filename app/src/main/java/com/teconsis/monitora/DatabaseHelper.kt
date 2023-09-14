@@ -168,5 +168,4 @@ class DatabaseHelper(context: Context) : SQLiteOpenHelper(context, "monitora.db"
 
         return userId
     }
-
 }

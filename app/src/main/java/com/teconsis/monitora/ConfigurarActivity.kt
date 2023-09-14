@@ -35,7 +35,7 @@ class ConfigurarActivity : AppCompatActivity() {
         retornarButton.setOnClickListener {
             val intent = Intent(this, MainActivity::class.java)
             startActivity(intent)
-            finish() // Encerra a atividade atual (ConfigurarActivity)
+            finish()
         }
     }
 }
