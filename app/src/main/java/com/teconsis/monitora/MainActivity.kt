@@ -29,16 +29,6 @@ class MainActivity : AppCompatActivity() {
         databaseHelper = DatabaseHelper(this)
         databaseHelper.createAdminUser()
 
-        //databaseHelper.insertAparelho("546146","tv sala")
-
-        //databaseHelper.deletarAparelhoPorId(1)
-
-        databaseHelper.updateAparelho(2,"64565546","tv quarto")
-        var aparelhoslist = databaseHelper.getAllAparelhos()
-
-        Log.d("aparelhos1",aparelhoslist.toString())
-
-
         loginButton.setOnClickListener {
             val email = emailEditText.text.toString()
             val password = passwordEditText.text.toString()
