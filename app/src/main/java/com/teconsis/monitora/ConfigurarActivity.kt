@@ -2,6 +2,7 @@ package com.teconsis.monitora
 
 import android.content.Intent
 import android.os.Bundle
+import android.util.Log
 import android.widget.Button
 import android.widget.EditText
 import androidx.appcompat.app.AppCompatActivity
@@ -36,6 +37,7 @@ class ConfigurarActivity : AppCompatActivity() {
             val intent = Intent(this, MainActivity::class.java)
             startActivity(intent)
             finish() // Encerra a atividade atual (ConfigurarActivity)
+
         }
     }
 }

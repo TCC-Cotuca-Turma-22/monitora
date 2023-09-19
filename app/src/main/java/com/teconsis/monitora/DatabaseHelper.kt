@@ -14,6 +14,12 @@ class DatabaseHelper(context: Context) : SQLiteOpenHelper(context, "monitora.db"
         const val COLUMN_EMAIL = "email"
         const val COLUMN_PASSWORD = "password"
         const val COLUMN_ROLE = "role"
+
+        const val TABLE_APARELHO = "aparelhos"
+        const val COLUMN_ID_APARELHO = "id"
+        const val COLUMN_CODIGO_INFRA = "codigo"
+        const val COlUMN_DESCRICAO = "descrição"
+
     }
 
     override fun onCreate(db: SQLiteDatabase?) {
@@ -24,6 +30,15 @@ class DatabaseHelper(context: Context) : SQLiteOpenHelper(context, "monitora.db"
                 "$COLUMN_ROLE TEXT)"
 
         db?.execSQL(createUserTableQuery)
+
+
+        val createAparelhoTableQuery = "CREATE TABLE IF NOT EXISTS $TABLE_APARELHO (" +
+                "$COLUMN_ID_APARELHO INTEGER PRIMARY KEY AUTOINCREMENT," +
+                "$COLUMN_CODIGO_INFRA TEXT," +
+                "$COlUMN_DESCRICAO TEXT)"
+
+        db?.execSQL(createAparelhoTableQuery)
+
     }
 
     fun createAdminUser() {
@@ -169,4 +184,78 @@ class DatabaseHelper(context: Context) : SQLiteOpenHelper(context, "monitora.db"
         return userId
     }
 
+    private fun isCodigoInfraExists(codigoInfra: String): Boolean {
+        val db = readableDatabase
+        val query = "SELECT COUNT(*) FROM $TABLE_APARELHO WHERE $COLUMN_CODIGO_INFRA = ?"
+        val cursor = db.rawQuery(query, arrayOf(codigoInfra))
+
+        cursor.use {
+            if (it.moveToFirst()) {
+                val count = it.getInt(0)
+                return count > 0
+            }
+        }
+        return false
+    }
+
+    fun insertAparelho(codigoInfra: String, descricao: String): Long {
+        val values = ContentValues()
+
+        // Verifique se o código de infra já existe no banco de dados
+        if (isCodigoInfraExists(codigoInfra)) {
+            throw IllegalArgumentException("Este código de infra já está em uso")
+        }
+
+        values.put(COLUMN_CODIGO_INFRA, codigoInfra)
+        values.put(COlUMN_DESCRICAO, descricao)
+
+        val db = writableDatabase
+        return db.insert(TABLE_APARELHO, null, values)
+    }
+
+
+    fun deletarAparelhoPorId(aparelhoId: Long): Int {
+        val db = writableDatabase
+        return db.delete(TABLE_APARELHO, "$COLUMN_ID_APARELHO = ?", arrayOf(aparelhoId.toString()))
+    }
+
+    fun getAllAparelhos(): List<Aparelho> {
+        val aparelhoList = mutableListOf<Aparelho>()
+
+        val db = readableDatabase
+        val query = "SELECT * FROM $TABLE_APARELHO"
+
+        val cursor = db.rawQuery(query, null)
+
+        try {
+            while (cursor.moveToNext()) {
+                val id = cursor.getLong(cursor.getColumnIndexOrThrow(COLUMN_ID_APARELHO))
+                val codigoInfra = cursor.getString(cursor.getColumnIndexOrThrow(COLUMN_CODIGO_INFRA))
+                val descricao = cursor.getString(cursor.getColumnIndexOrThrow(COlUMN_DESCRICAO))
+
+                val aparelho = Aparelho(id, codigoInfra, descricao)
+                aparelhoList.add(aparelho)
+            }
+        } catch (e: Exception) {
+            Log.e("TAG", "Erro ao recuperar todos os aparelhos: ${e.message}")
+        } finally {
+            cursor.close()
+        }
+        return aparelhoList
+    }
+
+    fun updateAparelho(id: Long, novoCodigo: String, novaDescricao: String): Int {
+        val values = ContentValues()
+
+        values.put(COLUMN_CODIGO_INFRA, novoCodigo)
+        values.put(COlUMN_DESCRICAO, novaDescricao)
+
+        val db = writableDatabase
+        return db.update(
+            TABLE_APARELHO,
+            values,
+            "$COLUMN_ID_APARELHO = ?",
+            arrayOf(id.toString())
+        )
+    }
 }
