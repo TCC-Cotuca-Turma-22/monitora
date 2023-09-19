@@ -183,7 +183,6 @@ class DatabaseHelper(context: Context) : SQLiteOpenHelper(context, "monitora.db"
 
         return userId
     }
-
     private fun isCodigoInfraExists(codigoInfra: String): Boolean {
         val db = readableDatabase
         val query = "SELECT COUNT(*) FROM $TABLE_APARELHO WHERE $COLUMN_CODIGO_INFRA = ?"
