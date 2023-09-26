@@ -3,6 +3,7 @@ package com.teconsis.monitora
 import android.content.Context
 import android.content.Intent
 import android.os.Bundle
+import android.util.Log
 import android.view.View
 import android.widget.ArrayAdapter
 import android.widget.Button
@@ -69,13 +70,13 @@ class ListaUsuariosActivity : AppCompatActivity() {
         deleteButton.setOnClickListener {
             val userIdEditText = findViewById<EditText>(R.id.userIdEditText)
             val userIdToDelete = userIdEditText.text.toString().toLongOrNull()
-            val userEmail = intent.getStringExtra("loggedInUserEmail")
 
             try {
                 if (userIdToDelete != null) {
                     // Chama a função para excluir o usuário do DatabaseHelper
-                    val rowsDeleted = userEmail?.let { it1 ->
+                    val rowsDeleted = loggedInUserEmail?.let { it1 ->
                         databaseHelper.deleteUserById(it1, userIdToDelete)
+                        Log.d("userIdTodele", userIdToDelete.toString())
                     }
 
                     if (rowsDeleted != null) {

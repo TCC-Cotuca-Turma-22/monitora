@@ -3,6 +3,7 @@ package com.teconsis.monitora
 import android.content.Context
 import android.content.Intent
 import android.os.Bundle
+import android.util.Log
 import android.util.Patterns
 import android.widget.Button
 import android.widget.EditText
@@ -75,5 +76,3 @@ class MainActivity : AppCompatActivity() {
         return emailPattern.matcher(email).matches() && password.isNotEmpty()
     }
 }
-
-

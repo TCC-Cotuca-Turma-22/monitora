@@ -17,13 +17,22 @@ class DatabaseHelper(context: Context) : SQLiteOpenHelper(context, "monitora.db"
 
         const val TABLE_APARELHO = "aparelhos"
         const val COLUMN_ID_APARELHO = "id"
-        const val COLUMN_CODIGO_INFRA = "codigo"
-        const val COlUMN_DESCRICAO = "descrição"
+        const val COLUMN_CODIGO_INFRA = "codigo_infra"
+        const val COLUMN_DESCRICAO_AP = "descricao_ap"
 
+        const val TABLE_DISPOSITIVO = "dispositivos"
+        const val COLUMN_ID_DISP = "id"
+        const val COLUMN_DESCRICAO_DISP = "descricao"
+        const val COLUMN_ID_APARELHO_FK = "id_aparelho"
+
+        const val TABLE_MODO_OP = "modo_operacao"
+        const val COLUMN_ID_MOD = "id"
+        const val COLUMN_DESCRICAO_MOD = "descricao"
+        const val COLUMN_MODO_OP = "modo_operacao"
     }
 
     override fun onCreate(db: SQLiteDatabase?) {
-        val createUserTableQuery = "CREATE TABLE IF NOT EXISTS $TABLE_USERS (" +
+        val createUserTableQuery = "CREATE TABLE IF NOT EXISTS $TABLE_USERS(" +
                 "$COLUMN_ID INTEGER PRIMARY KEY AUTOINCREMENT," +
                 "$COLUMN_EMAIL TEXT UNIQUE," +
                 "$COLUMN_PASSWORD TEXT," +
@@ -31,13 +40,28 @@ class DatabaseHelper(context: Context) : SQLiteOpenHelper(context, "monitora.db"
 
         db?.execSQL(createUserTableQuery)
 
-
-        val createAparelhoTableQuery = "CREATE TABLE IF NOT EXISTS $TABLE_APARELHO (" +
+        val createAparelhoTableQuery = "CREATE TABLE IF NOT EXISTS $TABLE_APARELHO(" +
                 "$COLUMN_ID_APARELHO INTEGER PRIMARY KEY AUTOINCREMENT," +
                 "$COLUMN_CODIGO_INFRA TEXT," +
-                "$COlUMN_DESCRICAO TEXT)"
+                "$COLUMN_DESCRICAO_AP TEXT)"
 
         db?.execSQL(createAparelhoTableQuery)
+
+        val createDispositivoTableQuery = "CREATE TABLE IF NOT EXISTS $TABLE_DISPOSITIVO(" +
+                "$COLUMN_ID_DISP INTEGER PRIMARY KEY AUTOINCREMENT," +
+                "$COLUMN_DESCRICAO_DISP TEXT," +
+                "$COLUMN_ID_APARELHO_FK INTEGER," +
+                "FOREIGN KEY ($COLUMN_ID_APARELHO_FK) REFERENCES $TABLE_APARELHO($COLUMN_ID_APARELHO)" +
+                ")"
+
+        db?.execSQL(createDispositivoTableQuery)
+
+        val createModoOperacaoTableQuery = "CREATE TABLE IF NOT EXISTS $TABLE_MODO_OP" +
+                "$COLUMN_ID_MOD INTEGER PRIMARY KEY AUTOINCREMENT," +
+                "$COLUMN_DESCRICAO_MOD TEXT," +
+                "$COLUMN_MODO_OP INTEGER)"
+
+        db?.execSQL(createModoOperacaoTableQuery)
 
     }
 
@@ -183,10 +207,10 @@ class DatabaseHelper(context: Context) : SQLiteOpenHelper(context, "monitora.db"
 
         return userId
     }
-    private fun isCodigoInfraExists(codigoInfra: String): Boolean {
+    private fun isCodigoInfraAndNameExists(codigoInfra: String, descricao: String): Boolean {
         val db = readableDatabase
-        val query = "SELECT COUNT(*) FROM $TABLE_APARELHO WHERE $COLUMN_CODIGO_INFRA = ?"
-        val cursor = db.rawQuery(query, arrayOf(codigoInfra))
+        val query = "SELECT COUNT(*) FROM $TABLE_APARELHO WHERE $COLUMN_CODIGO_INFRA = ? AND $COLUMN_DESCRICAO_AP = ?"
+        val cursor = db.rawQuery(query, arrayOf(codigoInfra, descricao))
 
         cursor.use {
             if (it.moveToFirst()) {
@@ -201,12 +225,12 @@ class DatabaseHelper(context: Context) : SQLiteOpenHelper(context, "monitora.db"
         val values = ContentValues()
 
         // Verifique se o código de infra já existe no banco de dados
-        if (isCodigoInfraExists(codigoInfra)) {
+        if (isCodigoInfraAndNameExists(codigoInfra, descricao)) {
             throw IllegalArgumentException("Este código de infra já está em uso")
         }
 
         values.put(COLUMN_CODIGO_INFRA, codigoInfra)
-        values.put(COlUMN_DESCRICAO, descricao)
+        values.put(COLUMN_DESCRICAO_AP, descricao)
 
         val db = writableDatabase
         return db.insert(TABLE_APARELHO, null, values)
@@ -230,7 +254,7 @@ class DatabaseHelper(context: Context) : SQLiteOpenHelper(context, "monitora.db"
             while (cursor.moveToNext()) {
                 val id = cursor.getLong(cursor.getColumnIndexOrThrow(COLUMN_ID_APARELHO))
                 val codigoInfra = cursor.getString(cursor.getColumnIndexOrThrow(COLUMN_CODIGO_INFRA))
-                val descricao = cursor.getString(cursor.getColumnIndexOrThrow(COlUMN_DESCRICAO))
+                val descricao = cursor.getString(cursor.getColumnIndexOrThrow(COLUMN_DESCRICAO_AP))
 
                 val aparelho = Aparelho(id, codigoInfra, descricao)
                 aparelhoList.add(aparelho)
@@ -247,7 +271,7 @@ class DatabaseHelper(context: Context) : SQLiteOpenHelper(context, "monitora.db"
         val values = ContentValues()
 
         values.put(COLUMN_CODIGO_INFRA, novoCodigo)
-        values.put(COlUMN_DESCRICAO, novaDescricao)
+        values.put(COLUMN_DESCRICAO_AP, novaDescricao)
 
         val db = writableDatabase
         return db.update(
