@@ -56,7 +56,7 @@ class DatabaseHelper(context: Context) : SQLiteOpenHelper(context, "monitora.db"
 
         db?.execSQL(createDispositivoTableQuery)
 
-        val createModoOperacaoTableQuery = "CREATE TABLE IF NOT EXISTS $TABLE_MODO_OP" +
+        val createModoOperacaoTableQuery = "CREATE TABLE IF NOT EXISTS $TABLE_MODO_OP(" +
                 "$COLUMN_ID_MOD INTEGER PRIMARY KEY AUTOINCREMENT," +
                 "$COLUMN_DESCRICAO_MOD TEXT," +
                 "$COLUMN_MODO_OP INTEGER)"
