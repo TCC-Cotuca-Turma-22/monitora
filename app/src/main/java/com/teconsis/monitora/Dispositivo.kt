@@ -1,7 +1,7 @@
 package com.teconsis.monitora
 
 data class Dispositivo(
-    val id: Long,
+    val id: Int,
     val descricao: String,
     val idAparelho: Long
 )

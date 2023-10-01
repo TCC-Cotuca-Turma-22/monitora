@@ -15,23 +15,24 @@ class DatabaseHelper(context: Context) : SQLiteOpenHelper(context, "monitora.db"
         const val COLUMN_PASSWORD = "password"
         const val COLUMN_ROLE = "role"
 
-        const val TABLE_APARELHO = "aparelhos"
+        const val TABLE_APARELHOS = "aparelhos"
         const val COLUMN_ID_APARELHO = "id"
-        const val COLUMN_CODIGO_INFRA = "codigo_infra"
-        const val COLUMN_DESCRICAO_AP = "descricao_ap"
+        const val COLUMN_CODIGO_INFRA = "codigoInfra"
+        const val COLUMN_DESCRICAO_AP = "descricao"
 
-        const val TABLE_DISPOSITIVO = "dispositivos"
+        const val TABLE_DISPOSITIVOS = "dispositivos"
         const val COLUMN_ID_DISP = "id"
         const val COLUMN_DESCRICAO_DISP = "descricao"
-        const val COLUMN_ID_APARELHO_FK = "id_aparelho"
+        const val COLUMN_ID_APARELHO_FK = "idAparelho"
 
-        const val TABLE_MODO_OP = "modo_operacao"
+        const val TABLE_MODO_OPS = "modo_operacao"
         const val COLUMN_ID_MOD = "id"
         const val COLUMN_DESCRICAO_MOD = "descricao"
-        const val COLUMN_MODO_OP = "modo_operacao"
+        const val COLUMN_MODO_OP = "modoOperacao"
     }
 
     override fun onCreate(db: SQLiteDatabase?) {
+
         val createUserTableQuery = "CREATE TABLE IF NOT EXISTS $TABLE_USERS(" +
                 "$COLUMN_ID INTEGER PRIMARY KEY AUTOINCREMENT," +
                 "$COLUMN_EMAIL TEXT UNIQUE," +
@@ -40,29 +41,28 @@ class DatabaseHelper(context: Context) : SQLiteOpenHelper(context, "monitora.db"
 
         db?.execSQL(createUserTableQuery)
 
-        val createAparelhoTableQuery = "CREATE TABLE IF NOT EXISTS $TABLE_APARELHO(" +
-                "$COLUMN_ID_APARELHO INTEGER PRIMARY KEY AUTOINCREMENT," +
-                "$COLUMN_CODIGO_INFRA TEXT," +
-                "$COLUMN_DESCRICAO_AP TEXT)"
-
-        db?.execSQL(createAparelhoTableQuery)
-
-        val createDispositivoTableQuery = "CREATE TABLE IF NOT EXISTS $TABLE_DISPOSITIVO(" +
-                "$COLUMN_ID_DISP INTEGER PRIMARY KEY AUTOINCREMENT," +
-                "$COLUMN_DESCRICAO_DISP TEXT," +
-                "$COLUMN_ID_APARELHO_FK INTEGER," +
-                "FOREIGN KEY ($COLUMN_ID_APARELHO_FK) REFERENCES $TABLE_APARELHO($COLUMN_ID_APARELHO)" +
-                ")"
-
-        db?.execSQL(createDispositivoTableQuery)
-
-        val createModoOperacaoTableQuery = "CREATE TABLE IF NOT EXISTS $TABLE_MODO_OP(" +
+        val createModoOperacaoTableQuery = "CREATE TABLE IF NOT EXISTS $TABLE_MODO_OPS(" +
                 "$COLUMN_ID_MOD INTEGER PRIMARY KEY AUTOINCREMENT," +
                 "$COLUMN_DESCRICAO_MOD TEXT," +
                 "$COLUMN_MODO_OP INTEGER)"
 
         db?.execSQL(createModoOperacaoTableQuery)
 
+        val createAparelhoTableQuery = "CREATE TABLE IF NOT EXISTS $TABLE_APARELHOS(" +
+                "$COLUMN_ID_APARELHO INTEGER PRIMARY KEY AUTOINCREMENT," +
+                "$COLUMN_CODIGO_INFRA TEXT," +
+                "$COLUMN_DESCRICAO_AP TEXT)"
+
+        db?.execSQL(createAparelhoTableQuery)
+
+        val createDispositivoTableQuery = "CREATE TABLE IF NOT EXISTS $TABLE_DISPOSITIVOS(" +
+                "$COLUMN_ID_DISP INTEGER PRIMARY KEY AUTOINCREMENT," +
+                "$COLUMN_DESCRICAO_DISP TEXT," +
+                "$COLUMN_ID_APARELHO_FK INTEGER," +
+                "FOREIGN KEY ($COLUMN_ID_APARELHO_FK) REFERENCES $TABLE_APARELHOS($COLUMN_ID_APARELHO)" +
+                ")"
+
+        db?.execSQL(createDispositivoTableQuery)
     }
 
     fun createAdminUser() {
@@ -81,6 +81,17 @@ class DatabaseHelper(context: Context) : SQLiteOpenHelper(context, "monitora.db"
             values.put(COLUMN_ROLE, adminRole)
 
             db.insert(TABLE_USERS, null, values)
+        }
+    }
+
+    fun createModoOperacaoPadrao(){
+        val db = writableDatabase
+
+        if(!modoOperacaoExiste(db)) {
+            val modoDesligadoValues = ContentValues()
+            modoDesligadoValues.put(COLUMN_DESCRICAO_MOD, "Desligado")
+            modoDesligadoValues.put(COLUMN_MODO_OP, 0)
+            db?.insert(TABLE_MODO_OPS, null, modoDesligadoValues)
         }
     }
 
@@ -130,7 +141,7 @@ class DatabaseHelper(context: Context) : SQLiteOpenHelper(context, "monitora.db"
 
         try {
             while (cursor.moveToNext()) {
-                val id = cursor.getLong(cursor.getColumnIndexOrThrow(COLUMN_ID))
+                val id = cursor.getInt(cursor.getColumnIndexOrThrow(COLUMN_ID))
                 val email = cursor.getString(cursor.getColumnIndexOrThrow(COLUMN_EMAIL))
                 val password = cursor.getString(cursor.getColumnIndexOrThrow(COLUMN_PASSWORD))
 
@@ -207,9 +218,11 @@ class DatabaseHelper(context: Context) : SQLiteOpenHelper(context, "monitora.db"
 
         return userId
     }
+
     private fun isCodigoInfraAndNameExists(codigoInfra: String, descricao: String): Boolean {
         val db = readableDatabase
-        val query = "SELECT COUNT(*) FROM $TABLE_APARELHO WHERE $COLUMN_CODIGO_INFRA = ? AND $COLUMN_DESCRICAO_AP = ?"
+        val query =
+            "SELECT COUNT(*) FROM $TABLE_APARELHOS WHERE $COLUMN_CODIGO_INFRA = ? AND $COLUMN_DESCRICAO_AP = ?"
         val cursor = db.rawQuery(query, arrayOf(codigoInfra, descricao))
 
         cursor.use {
@@ -233,27 +246,28 @@ class DatabaseHelper(context: Context) : SQLiteOpenHelper(context, "monitora.db"
         values.put(COLUMN_DESCRICAO_AP, descricao)
 
         val db = writableDatabase
-        return db.insert(TABLE_APARELHO, null, values)
+        return db.insert(TABLE_APARELHOS, null, values)
     }
 
 
     fun deletarAparelhoPorId(aparelhoId: Long): Int {
         val db = writableDatabase
-        return db.delete(TABLE_APARELHO, "$COLUMN_ID_APARELHO = ?", arrayOf(aparelhoId.toString()))
+        return db.delete(TABLE_APARELHOS, "$COLUMN_ID_APARELHO = ?", arrayOf(aparelhoId.toString()))
     }
 
     fun getAllAparelhos(): List<Aparelho> {
         val aparelhoList = mutableListOf<Aparelho>()
 
         val db = readableDatabase
-        val query = "SELECT * FROM $TABLE_APARELHO"
+        val query = "SELECT * FROM $TABLE_APARELHOS"
 
         val cursor = db.rawQuery(query, null)
 
         try {
             while (cursor.moveToNext()) {
-                val id = cursor.getLong(cursor.getColumnIndexOrThrow(COLUMN_ID_APARELHO))
-                val codigoInfra = cursor.getString(cursor.getColumnIndexOrThrow(COLUMN_CODIGO_INFRA))
+                val id = cursor.getInt(cursor.getColumnIndexOrThrow(COLUMN_ID_APARELHO))
+                val codigoInfra =
+                    cursor.getString(cursor.getColumnIndexOrThrow(COLUMN_CODIGO_INFRA))
                 val descricao = cursor.getString(cursor.getColumnIndexOrThrow(COLUMN_DESCRICAO_AP))
 
                 val aparelho = Aparelho(id, codigoInfra, descricao)
@@ -267,7 +281,7 @@ class DatabaseHelper(context: Context) : SQLiteOpenHelper(context, "monitora.db"
         return aparelhoList
     }
 
-    fun updateAparelho(id: Long, novoCodigo: String, novaDescricao: String): Int {
+    fun updateAparelho(id: Int, novoCodigo: String, novaDescricao: String): Int {
         val values = ContentValues()
 
         values.put(COLUMN_CODIGO_INFRA, novoCodigo)
@@ -275,10 +289,58 @@ class DatabaseHelper(context: Context) : SQLiteOpenHelper(context, "monitora.db"
 
         val db = writableDatabase
         return db.update(
-            TABLE_APARELHO,
+            TABLE_APARELHOS,
             values,
             "$COLUMN_ID_APARELHO = ?",
             arrayOf(id.toString())
         )
+    }
+
+    fun atualizarModoOperacao(modoOperacao: ModoOperacao) {
+        val db = writableDatabase
+        val values = ContentValues()
+        values.put(COLUMN_MODO_OP, modoOperacao.modoOperacao)
+        values.put(COLUMN_DESCRICAO_MOD, modoOperacao.descricao)
+
+        db.update(TABLE_MODO_OPS, values, "$COLUMN_ID_MOD = ?", arrayOf(modoOperacao.id.toString()))
+        db.close()
+    }
+
+    fun getAllModoOperacoes(): List<ModoOperacao> {
+        val modoOperacaoList = mutableListOf<ModoOperacao>()
+
+        val db = readableDatabase
+        val query = "SELECT * FROM $TABLE_MODO_OPS"
+
+        val cursor = db.rawQuery(query, null)
+
+        try {
+            while (cursor.moveToNext()) {
+                val id = cursor.getInt(cursor.getColumnIndexOrThrow(COLUMN_ID_MOD))
+                val descricao = cursor.getString(cursor.getColumnIndexOrThrow(COLUMN_DESCRICAO_MOD))
+                val modoOperacao = cursor.getInt(cursor.getColumnIndexOrThrow(COLUMN_MODO_OP))
+
+                val modo = ModoOperacao(id, descricao, modoOperacao)
+                modoOperacaoList.add(modo)
+            }
+        } catch (e: Exception) {
+            Log.e("TAG", "Erro ao recuperar todos os modos de operação: ${e.message}")
+        } finally {
+            cursor.close()
+        }
+        return modoOperacaoList
+    }
+
+    private fun modoOperacaoExiste(db: SQLiteDatabase): Boolean {
+        val query = "SELECT COUNT(*) FROM $TABLE_MODO_OPS"
+        val cursor = db.rawQuery(query, null)
+
+        cursor.use {
+            if (it.moveToFirst()) {
+                val count = it.getInt(0)
+                return count > 0
+            }
+        }
+        return false
     }
 }
