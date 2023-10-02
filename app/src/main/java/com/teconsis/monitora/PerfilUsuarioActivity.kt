@@ -1,9 +1,7 @@
 package com.teconsis.monitora
 
-import android.content.Context
 import android.content.Intent
 import android.os.Bundle
-import android.util.Log
 import android.widget.Button
 import androidx.appcompat.app.AppCompatActivity
 import com.google.gson.Gson
@@ -25,11 +23,10 @@ class PerfilUsuarioActivity : AppCompatActivity() {
             startActivity(intent)
         }
 
-        val voltarButton: Button = findViewById(R.id.configButton)
-        voltarButton.setOnClickListener {
+        val configButton: Button = findViewById(R.id.configButton)
+        configButton.setOnClickListener {
             val intent = Intent(this, ConfiguracoesActivity::class.java)
             startActivity(intent)
-            finish()
         }
 
         showUsersButton = findViewById(R.id.showUsersButton)

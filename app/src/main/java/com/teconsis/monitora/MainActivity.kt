@@ -28,6 +28,7 @@ class MainActivity : AppCompatActivity() {
 
         databaseHelper = DatabaseHelper(this)
         databaseHelper.createAdminUser()
+        databaseHelper.createModoOperacaoPadrao()
 
         loginButton.setOnClickListener {
             val email = emailEditText.text.toString()
@@ -75,5 +76,3 @@ class MainActivity : AppCompatActivity() {
         return emailPattern.matcher(email).matches() && password.isNotEmpty()
     }
 }
-
-

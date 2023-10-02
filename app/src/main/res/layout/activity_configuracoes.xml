@@ -7,7 +7,7 @@
     android:background="@drawable/fundo"
     tools:context=".ConfiguracoesActivity">
 
-    <Button
+    <ToggleButton
         android:id="@+id/ligaDesligaButton"
         android:layout_width="120dp"
         android:layout_height="50dp"
@@ -15,7 +15,8 @@
         android:layout_alignParentBottom="true"
         android:layout_marginStart="47dp"
         android:layout_marginBottom="199dp"
-        android:text="Liga/Desliga" />
+        android:textOff="Desligado"
+        android:textOn="Ligado" />
 
     <Button
         android:id="@+id/configurarButton"
