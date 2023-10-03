@@ -29,7 +29,7 @@
         android:text="Configurar" />
 
     <Button
-        android:id="@+id/retornarButton"
+        android:id="@+id/sairButton"
         android:layout_width="120dp"
         android:layout_height="50dp"
         android:layout_alignParentStart="true"
@@ -38,7 +38,7 @@
         android:layout_marginStart="47dp"
         android:layout_marginEnd="34dp"
         android:layout_marginBottom="127dp"
-        android:text="Voltar" />
+        android:text="Sair" />
 
     <TextView
         android:id="@+id/textView"

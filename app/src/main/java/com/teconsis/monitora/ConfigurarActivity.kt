@@ -2,7 +2,6 @@ package com.teconsis.monitora
 
 import android.content.Intent
 import android.os.Bundle
-import android.util.Log
 import android.widget.Button
 import android.widget.EditText
 import androidx.appcompat.app.AppCompatActivity
@@ -34,7 +33,7 @@ class ConfigurarActivity : AppCompatActivity() {
         }
 
         retornarButton.setOnClickListener {
-            val intent = Intent(this, MainActivity::class.java)
+            val intent = Intent(this, ConfiguracoesActivity::class.java)
             startActivity(intent)
             finish()
         }
