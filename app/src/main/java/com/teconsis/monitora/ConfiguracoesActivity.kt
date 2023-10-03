@@ -2,7 +2,6 @@ package com.teconsis.monitora
 
 import android.content.Intent
 import android.os.Bundle
-import android.util.Log
 import android.widget.Button
 import android.widget.ToggleButton
 import androidx.appcompat.app.AppCompatActivity
@@ -18,24 +17,21 @@ class ConfiguracoesActivity : AppCompatActivity() {
 
         val ligaDesligaButton = findViewById<ToggleButton>(R.id.ligaDesligaButton)
         val configurarButton: Button = findViewById(R.id.configurarButton)
-        val retornarButton: Button = findViewById(R.id.retornarButton)
+        val sairButton: Button = findViewById(R.id.sairButton)
 
       ligaDesligaButton.setOnCheckedChangeListener { buttonView, isChecked ->
         modoOperacao = ModoOperacao.ligarDesligar(1, isChecked)
         databaseHelper.atualizarModoOperacao(modoOperacao)
-          val listaDisp = databaseHelper.getAllModoOperacoes()
-          Log.d("ListaSisp", listaDisp.toString())
 
       }
-        val listaAp = databaseHelper.getAllAparelhos()
-        Log.d("Lista", listaAp.toString())
+
         configurarButton.setOnClickListener {
             val intent = Intent(this, ConfigurarActivity::class.java)
             startActivity(intent)
             finish()
         }
 
-        retornarButton.setOnClickListener {
+        sairButton.setOnClickListener {
             val intent = Intent(this, MainActivity::class.java)
             startActivity(intent)
             finish()

@@ -15,54 +15,79 @@ class DatabaseHelper(context: Context) : SQLiteOpenHelper(context, "monitora.db"
         const val COLUMN_PASSWORD = "password"
         const val COLUMN_ROLE = "role"
 
+        const val TABLE_MODO_OPS = "modo_operacao"
+        const val COLUMN_ID_MOD = "id"
+        const val COLUMN_DESCRICAO_MOD = "descricao"
+        const val COLUMN_MODO_OP = "modo_operacao"
+
         const val TABLE_APARELHOS = "aparelhos"
         const val COLUMN_ID_APARELHO = "id"
-        const val COLUMN_CODIGO_INFRA = "codigoInfra"
+        const val COLUMN_CODIGO_INFRA = "codigo_infra"
         const val COLUMN_DESCRICAO_AP = "descricao"
 
         const val TABLE_DISPOSITIVOS = "dispositivos"
         const val COLUMN_ID_DISP = "id"
         const val COLUMN_DESCRICAO_DISP = "descricao"
-        const val COLUMN_ID_APARELHO_FK = "idAparelho"
+        const val COLUMN_ID_APARELHO_FK = "id_aparelho"
 
-        const val TABLE_MODO_OPS = "modo_operacao"
-        const val COLUMN_ID_MOD = "id"
-        const val COLUMN_DESCRICAO_MOD = "descricao"
-        const val COLUMN_MODO_OP = "modoOperacao"
+        const val TABLE_CONFIGURACAO_USUARIO = "configuracao_usuario"
+        const val COLUMN_ID_USUARIO = "id_usuario"
+        const val COLUMN_ID_DISPOSITIVO = "id_dispositivo"
+        const val COLUMN_ID_MODO_OPERACAO = "id_modo_operacao"
+        const val COLUMN_TEMPORIZADOR = "temporizador"
     }
 
     override fun onCreate(db: SQLiteDatabase?) {
+        db?.beginTransaction()
 
-        val createUserTableQuery = "CREATE TABLE IF NOT EXISTS $TABLE_USERS(" +
-                "$COLUMN_ID INTEGER PRIMARY KEY AUTOINCREMENT," +
-                "$COLUMN_EMAIL TEXT UNIQUE," +
-                "$COLUMN_PASSWORD TEXT," +
-                "$COLUMN_ROLE TEXT)"
+        try {
+            val createUserTableQuery = "CREATE TABLE IF NOT EXISTS $TABLE_USERS(" +
+                    "$COLUMN_ID INTEGER PRIMARY KEY AUTOINCREMENT," +
+                    "$COLUMN_EMAIL TEXT UNIQUE," +
+                    "$COLUMN_PASSWORD TEXT," +
+                    "$COLUMN_ROLE TEXT)"
 
-        db?.execSQL(createUserTableQuery)
+            db?.execSQL(createUserTableQuery)
 
-        val createModoOperacaoTableQuery = "CREATE TABLE IF NOT EXISTS $TABLE_MODO_OPS(" +
-                "$COLUMN_ID_MOD INTEGER PRIMARY KEY AUTOINCREMENT," +
-                "$COLUMN_DESCRICAO_MOD TEXT," +
-                "$COLUMN_MODO_OP INTEGER)"
+            val createModoOperacaoTableQuery = "CREATE TABLE IF NOT EXISTS $TABLE_MODO_OPS(" +
+                    "$COLUMN_ID_MOD INTEGER PRIMARY KEY AUTOINCREMENT," +
+                    "$COLUMN_DESCRICAO_MOD TEXT," +
+                    "$COLUMN_MODO_OP INTEGER)"
 
-        db?.execSQL(createModoOperacaoTableQuery)
+            db?.execSQL(createModoOperacaoTableQuery)
 
-        val createAparelhoTableQuery = "CREATE TABLE IF NOT EXISTS $TABLE_APARELHOS(" +
-                "$COLUMN_ID_APARELHO INTEGER PRIMARY KEY AUTOINCREMENT," +
-                "$COLUMN_CODIGO_INFRA TEXT," +
-                "$COLUMN_DESCRICAO_AP TEXT)"
+            val createAparelhoTableQuery = "CREATE TABLE IF NOT EXISTS $TABLE_APARELHOS(" +
+                    "$COLUMN_ID_APARELHO INTEGER PRIMARY KEY AUTOINCREMENT," +
+                    "$COLUMN_CODIGO_INFRA TEXT," +
+                    "$COLUMN_DESCRICAO_AP TEXT)"
 
-        db?.execSQL(createAparelhoTableQuery)
+            db?.execSQL(createAparelhoTableQuery)
 
-        val createDispositivoTableQuery = "CREATE TABLE IF NOT EXISTS $TABLE_DISPOSITIVOS(" +
-                "$COLUMN_ID_DISP INTEGER PRIMARY KEY AUTOINCREMENT," +
-                "$COLUMN_DESCRICAO_DISP TEXT," +
-                "$COLUMN_ID_APARELHO_FK INTEGER," +
-                "FOREIGN KEY ($COLUMN_ID_APARELHO_FK) REFERENCES $TABLE_APARELHOS($COLUMN_ID_APARELHO)" +
-                ")"
+            val createDispositivoTableQuery = "CREATE TABLE IF NOT EXISTS $TABLE_DISPOSITIVOS(" +
+                    "$COLUMN_ID_DISP INTEGER PRIMARY KEY AUTOINCREMENT," +
+                    "$COLUMN_DESCRICAO_DISP TEXT," +
+                    "$COLUMN_ID_APARELHO_FK INTEGER," +
+                    "FOREIGN KEY ($COLUMN_ID_APARELHO_FK) REFERENCES $TABLE_APARELHOS($COLUMN_ID_APARELHO)" +
+                    ")"
 
-        db?.execSQL(createDispositivoTableQuery)
+            db?.execSQL(createDispositivoTableQuery)
+
+            val createConfiguracaoUsuarioTableQuery =
+                "CREATE TABLE IF NOT EXISTS $TABLE_CONFIGURACAO_USUARIO(" +
+                        "$COLUMN_ID_USUARIO INTEGER NOT NULL," +
+                        "$COLUMN_ID_DISPOSITIVO INTEGER NOT NULL," +
+                        "$COLUMN_ID_MODO_OPERACAO INTEGER NOT NULL," +
+                        "$COLUMN_TEMPORIZADOR INTEGER," +
+                        "FOREIGN KEY ($COLUMN_ID_USUARIO) REFERENCES $TABLE_USERS($COLUMN_ID)," +
+                        "FOREIGN KEY ($COLUMN_ID_DISPOSITIVO) REFERENCES $TABLE_DISPOSITIVOS($COLUMN_ID_DISP)," +
+                        "FOREIGN KEY ($COLUMN_ID_MODO_OPERACAO) REFERENCES $TABLE_MODO_OPS($COLUMN_ID_MOD)" +
+                        ")"
+
+            db?.execSQL(createConfiguracaoUsuarioTableQuery)
+            db?.setTransactionSuccessful()
+        } finally {
+            db?.endTransaction()
+        }
     }
 
     fun createAdminUser() {
@@ -84,10 +109,10 @@ class DatabaseHelper(context: Context) : SQLiteOpenHelper(context, "monitora.db"
         }
     }
 
-    fun createModoOperacaoPadrao(){
+    fun createModoOperacaoPadrao() {
         val db = writableDatabase
 
-        if(!modoOperacaoExiste(db)) {
+        if (!modoOperacaoExiste(db)) {
             val modoDesligadoValues = ContentValues()
             modoDesligadoValues.put(COLUMN_DESCRICAO_MOD, "Desligado")
             modoDesligadoValues.put(COLUMN_MODO_OP, 0)
