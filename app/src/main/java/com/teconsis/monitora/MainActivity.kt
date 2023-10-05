@@ -29,7 +29,7 @@ class MainActivity : AppCompatActivity() {
         databaseHelper = DatabaseHelper(this)
         databaseHelper.createAdminUser()
         databaseHelper.createModoOperacaoPadrao()
-
+       // databaseHelper.insertAparelho("78910","TV Teste 2")
         loginButton.setOnClickListener {
             val email = emailEditText.text.toString()
             val password = passwordEditText.text.toString()
