@@ -56,7 +56,7 @@ class MainActivity : AppCompatActivity() {
                     val sharedPreferences =
                         getSharedPreferences("mySharedPreferences", Context.MODE_PRIVATE)
                     val editor = sharedPreferences.edit()
-                    editor.putLong("loggedInUserId", loggedInUserId)
+                    editor.putInt("loggedInUserId", loggedInUserId)
                     editor.putString("loggedInUserEmail", email)
                     editor.apply()
                 }
@@ -117,7 +117,7 @@ class MainActivity : AppCompatActivity() {
             GlobalScope.launch(Dispatchers.IO) {
                 try {
                     val message = MimeMessage(session)
-                    message.setFrom(InternetAddress(userEmail)) // Substitua pelo seu endereço de e-mail
+                    message.setFrom(InternetAddress(userEmail))
                     message.setRecipients(
                         Message.RecipientType.TO,
                         InternetAddress.parse(userEmail)
@@ -127,7 +127,9 @@ class MainActivity : AppCompatActivity() {
 
                     Transport.send(message)
 
-                    Log.e("Email", "Email de redefinição enviado com sucesso")
+                    runOnUiThread {
+                        Toast.makeText(applicationContext, "Email de redefinição enviado com sucesso", Toast.LENGTH_SHORT).show()
+                    }
 
                     databaseHelper.updateUserByEmail(userEmail, newPassword)
 

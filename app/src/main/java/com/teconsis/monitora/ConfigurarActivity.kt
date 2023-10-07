@@ -1,13 +1,14 @@
 package com.teconsis.monitora
 
-import android.content.ContentValues
 import android.content.Context
 import android.content.Intent
 import android.os.Bundle
+import android.util.Log
 import android.widget.ArrayAdapter
 import android.widget.Button
 import android.widget.EditText
 import android.widget.Spinner
+import android.widget.Toast
 import androidx.appcompat.app.AppCompatActivity
 
 class ConfigurarActivity : AppCompatActivity() {
@@ -22,8 +23,7 @@ class ConfigurarActivity : AppCompatActivity() {
 
         databaseHelper = DatabaseHelper(this)
         val sharedPreferences = getSharedPreferences("mySharedPreferences", Context.MODE_PRIVATE)
-        val loggedInUserId = sharedPreferences.getLong("loggedInUserId", -1)
-       // aparelhoEditText = findViewById(R.id.aparelhoEditText)
+        val loggedInUserId = sharedPreferences.getInt("loggedInUserId", -1)
         temporizadorEditText = findViewById(R.id.temporizadorEditText)
         val gravarButton: Button = findViewById(R.id.gravarButton)
         val retornarButton: Button = findViewById(R.id.retornarButton)
@@ -42,26 +42,29 @@ class ConfigurarActivity : AppCompatActivity() {
 
             temporizadorEditText.text.clear()
 
-            val db = DatabaseHelper(this).writableDatabase
-            val values = ContentValues()
+            val db = databaseHelper.writableDatabase
+            val selectedAparelho = aparelhoList[aparelhoSpinner.selectedItemPosition]
+            val configuracao =
+                databaseHelper.verificarEAtualizarConfiguracao(
+                    db,
+                    loggedInUserId,
+                    1,
+                    1,
+                    temporizador
+                )
 
-            values.put(DatabaseHelper.COLUMN_ID_USUARIO, loggedInUserId)
-            values.put(DatabaseHelper.COLUMN_ID_DISPOSITIVO, 1)
-            values.put(DatabaseHelper.COLUMN_ID_MODO_OPERACAO, 1)
-            values.put(DatabaseHelper.COLUMN_TEMPORIZADOR, temporizador)
+            if (configuracao) {
+                databaseHelper.updateDispositivoById(1, selectedAparelho.id)
+                val mensagem = "Configuração cadastrada com sucesso"
+                Log.e("Configuração", mensagem)
+                Toast.makeText(this, mensagem, Toast.LENGTH_SHORT).show()
 
-            val configuracaoId = db.insert(DatabaseHelper.TABLE_CONFIGURACAO_USUARIO, null, values)
-
-// Verifique se a inserção foi bem-sucedida
-            if (configuracaoId != -1L) {
-                // Inserção bem-sucedida
             } else {
-                // Falha na inserção
+                val mensagem = "Falha na inserção da configuração"
+                Log.e("Configuração", mensagem)
+                Toast.makeText(this, mensagem, Toast.LENGTH_SHORT).show()
             }
-
         }
-
-
 
         retornarButton.setOnClickListener {
             val intent = Intent(this, ConfiguracoesActivity::class.java)
@@ -70,3 +73,5 @@ class ConfigurarActivity : AppCompatActivity() {
         }
     }
 }
+
+
