@@ -97,7 +97,6 @@ class DatabaseHelper(context: Context) : SQLiteOpenHelper(context, "monitora.db"
 
         val db = writableDatabase
 
-        // Verifique se o usuário administrador já existe
         if (!isEmailExists(adminEmail)) {
             val values = ContentValues()
 
@@ -113,10 +112,10 @@ class DatabaseHelper(context: Context) : SQLiteOpenHelper(context, "monitora.db"
         val db = writableDatabase
 
         if (!modoOperacaoExiste(db)) {
-            val modoDesligadoValues = ContentValues()
-            modoDesligadoValues.put(COLUMN_DESCRICAO_MOD, "Desligado")
-            modoDesligadoValues.put(COLUMN_MODO_OP, 0)
-            db?.insert(TABLE_MODO_OPS, null, modoDesligadoValues)
+            val values = ContentValues()
+            values.put(COLUMN_DESCRICAO_MOD, "Desligado")
+            values.put(COLUMN_MODO_OP, 0)
+            db?.insert(TABLE_MODO_OPS, null, values)
         }
     }
 
@@ -144,18 +143,42 @@ class DatabaseHelper(context: Context) : SQLiteOpenHelper(context, "monitora.db"
         val dispositivo = "SmartOff"
 
         if (!dispositivoExiste(db)) {
-            val contentValues = ContentValues()
-            contentValues.put(COLUMN_DESCRICAO_DISP, dispositivo)
-            contentValues.putNull(COLUMN_ID_APARELHO_FK)
-            db.insert(TABLE_DISPOSITIVOS, null, contentValues)
+            val values = ContentValues()
+            values.put(COLUMN_DESCRICAO_DISP, dispositivo)
+            values.putNull(COLUMN_ID_APARELHO_FK)
+            db.insert(TABLE_DISPOSITIVOS, null, values)
         }
+    }
+
+    fun createConfiguracaoUsuario(
+        id: Int,
+        idDispositivo: Int,
+        idModoOperacao: Int,
+        temporizador: Int
+    ): Boolean {
+        val db = writableDatabase
+
+        if (!verificarEAtualizarConfiguracao(db, id, idDispositivo, idModoOperacao, temporizador)) {
+            val values = ContentValues()
+            values.put(COLUMN_ID_USUARIO, id)
+            values.put(COLUMN_ID_DISPOSITIVO, idDispositivo)
+            values.put(COLUMN_ID_MODO_OPERACAO, idModoOperacao)
+            values.put(COLUMN_TEMPORIZADOR, temporizador)
+
+            val result = db.insert(TABLE_CONFIGURACAO_USUARIO, null, values)
+
+            if (result != -1L) {
+                return true
+            }
+        }
+        return false
     }
 
     override fun onUpgrade(db: SQLiteDatabase?, oldVersion: Int, newVersion: Int) {
         // Atualize o esquema do banco de dados, se necessário
     }
 
-    fun insertUser(email: String, password: String): Long {
+    fun insertUser(email: String, password: String): Boolean {
         val values = ContentValues()
         if (email.isEmpty() || password.isEmpty()) {
             throw IllegalArgumentException("Email e senha não podem estar vazios")
@@ -170,7 +193,8 @@ class DatabaseHelper(context: Context) : SQLiteOpenHelper(context, "monitora.db"
         values.put(COLUMN_PASSWORD, password)
 
         val db = writableDatabase
-        return db.insert(TABLE_USERS, null, values)
+        val result = db.insert(TABLE_USERS, null, values)
+        return result.toInt() != 1
     }
 
     private fun isEmailExists(email: String): Boolean {
@@ -212,13 +236,14 @@ class DatabaseHelper(context: Context) : SQLiteOpenHelper(context, "monitora.db"
         return userList
     }
 
-    fun updateUser(id: Long, novoEmail: String, novoPassword: String): Int {
+    fun updateUser(id: Int, novoEmail: String, novoPassword: String, novoRole: String): Int {
         val values = ContentValues()
         if (novoEmail.isEmpty() || novoPassword.isEmpty()) {
             throw IllegalArgumentException("Novo e-mail e senha não podem estar vazios")
         }
         values.put(COLUMN_EMAIL, novoEmail)
         values.put(COLUMN_PASSWORD, novoPassword)
+        values.put(COLUMN_ROLE, novoRole)
 
         val db = writableDatabase
         return db.update(
@@ -243,7 +268,7 @@ class DatabaseHelper(context: Context) : SQLiteOpenHelper(context, "monitora.db"
         )
     }
 
-    fun deleteUserById(adminEmail: String, userId: Long): Int {
+    fun deleteUserById(adminEmail: String, userId: Int): Int {
         val adminRole = getRoleUser(adminEmail)
 
         if (adminRole == "admin") {
@@ -270,17 +295,17 @@ class DatabaseHelper(context: Context) : SQLiteOpenHelper(context, "monitora.db"
         return null // Retorna null se a função não for encontrada
     }
 
-    fun authenticateUser(email: String, password: String): Long? {
-        var userId: Long? = null
+    fun authenticateUser(email: String, password: String): Int? {
+        var userId: Int? = null
 
         val query =
-            "SELECT ${DatabaseHelper.COLUMN_ID} FROM ${DatabaseHelper.TABLE_USERS} WHERE " +
-                    "${DatabaseHelper.COLUMN_EMAIL} = ? AND ${DatabaseHelper.COLUMN_PASSWORD} = ?"
+            "SELECT ${COLUMN_ID} FROM ${TABLE_USERS} WHERE " +
+                    "${COLUMN_EMAIL} = ? AND ${COLUMN_PASSWORD} = ?"
 
         val cursor = readableDatabase.rawQuery(query, arrayOf(email, password))
 
         if (cursor.moveToFirst()) {
-            userId = cursor.getLong(cursor.getColumnIndexOrThrow(DatabaseHelper.COLUMN_ID))
+            userId = cursor.getInt(cursor.getColumnIndexOrThrow(COLUMN_ID))
         }
 
         cursor.close()
@@ -304,7 +329,7 @@ class DatabaseHelper(context: Context) : SQLiteOpenHelper(context, "monitora.db"
         return false
     }
 
-    fun insertAparelho(codigoInfra: String, descricao: String): Long {
+    fun insertAparelho(codigoInfra: String, descricao: String): Boolean {
         val values = ContentValues()
 
         // Verifique se o código de infra já existe no banco de dados
@@ -316,11 +341,12 @@ class DatabaseHelper(context: Context) : SQLiteOpenHelper(context, "monitora.db"
         values.put(COLUMN_DESCRICAO_AP, descricao)
 
         val db = writableDatabase
-        return db.insert(TABLE_APARELHOS, null, values)
+        val result = db.insert(TABLE_APARELHOS, null, values)
+        return result.toInt() != -1
     }
 
 
-    fun deletarAparelhoPorId(aparelhoId: Long): Int {
+    fun deletarAparelhoPorId(aparelhoId: Int): Int {
         val db = writableDatabase
         return db.delete(TABLE_APARELHOS, "$COLUMN_ID_APARELHO = ?", arrayOf(aparelhoId.toString()))
     }
@@ -420,11 +446,9 @@ class DatabaseHelper(context: Context) : SQLiteOpenHelper(context, "monitora.db"
 
         cursor.use {
             if (it != null) {
-                if (it.moveToFirst()){
-                    val count = it?.getInt(0)
-                    if (count != null) {
-                        return count > 0
-                    }
+                if (it.moveToFirst()) {
+                    val count = it.getInt(0)
+                    return count > 0
                 }
             }
         }
@@ -437,14 +461,95 @@ class DatabaseHelper(context: Context) : SQLiteOpenHelper(context, "monitora.db"
 
         cursor.use {
             if (it != null) {
-                if (it.moveToFirst()){
-                    val count = it?.getInt(0)
-                    if (count != null) {
-                        return count > 0
-                    }
+                if (it.moveToFirst()) {
+                    val count = it.getInt(0)
+                    return count > 0
                 }
             }
         }
         return false
+    }
+
+
+
+    private fun configuracaoExiste(db: SQLiteDatabase?): Boolean {
+        val query = "SELECT COUNT(*) FROM ${DatabaseHelper.TABLE_CONFIGURACAO_USUARIO}"
+        val cursor = db?.rawQuery(query, null)
+
+        cursor.use {
+            if (it != null) {
+                if (it.moveToFirst()) {
+                    val count = it.getInt(0)
+                    return count > 0
+                }
+            }
+        }
+        return false
+    }
+
+    fun verificarEAtualizarConfiguracao(
+        db: SQLiteDatabase?,
+        idUsuario: Int,
+        idDispositivo: Int,
+        idModoOperacao: Int,
+        novoTemporizador: Int
+    ): Boolean {
+        val query = "SELECT $COLUMN_TEMPORIZADOR FROM $TABLE_CONFIGURACAO_USUARIO " +
+                "WHERE $COLUMN_ID_USUARIO = ? " +
+                "AND $COLUMN_ID_DISPOSITIVO = ? " +
+                "AND $COLUMN_ID_MODO_OPERACAO = ?"
+
+        val args = arrayOf(
+            idUsuario.toString(),
+            idDispositivo.toString(),
+            idModoOperacao.toString()
+        )
+
+        val cursor = db?.rawQuery(query, args)
+
+        cursor.use {
+            if (it != null) {
+                if (it.moveToFirst()) {
+                    val temporizadorExistente = it.getInt(0)
+                    if (temporizadorExistente != novoTemporizador) {
+                        // O temporizador é diferente, então atualize-o
+                        val values = ContentValues()
+                        values.put(COLUMN_TEMPORIZADOR, novoTemporizador)
+                        val whereClause = "$COLUMN_ID_USUARIO = ? AND $COLUMN_ID_DISPOSITIVO = ? AND $COLUMN_ID_MODO_OPERACAO = ?"
+                        val whereArgs = arrayOf(
+                            idUsuario.toString(),
+                            idDispositivo.toString(),
+                            idModoOperacao.toString()
+                        )
+                        db?.update(TABLE_CONFIGURACAO_USUARIO, values, whereClause, whereArgs)
+                    }
+                    return true
+                }
+            }
+        }
+
+        // Se não houver correspondência, crie um novo registro
+        val values = ContentValues()
+        values.put(COLUMN_ID_USUARIO, idUsuario)
+        values.put(COLUMN_ID_DISPOSITIVO, idDispositivo)
+        values.put(COLUMN_ID_MODO_OPERACAO, idModoOperacao)
+        values.put(COLUMN_TEMPORIZADOR, novoTemporizador)
+        val insertResult = db?.insert(TABLE_CONFIGURACAO_USUARIO, null, values)
+
+        return insertResult != -1L
+    }
+
+    fun updateDispositivoById(id: Int, idAparelho: Int): Int {
+        val values = ContentValues()
+
+        values.put(COLUMN_ID_APARELHO_FK, idAparelho)
+
+        val db = writableDatabase
+        return db.update(
+            TABLE_DISPOSITIVOS,
+            values,
+            "$COLUMN_ID_DISP = ?",
+            arrayOf(id.toString())
+        )
     }
 }

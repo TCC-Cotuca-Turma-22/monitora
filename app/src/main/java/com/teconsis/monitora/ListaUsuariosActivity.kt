@@ -69,7 +69,7 @@ class ListaUsuariosActivity : AppCompatActivity() {
 
         deleteButton.setOnClickListener {
             val userIdEditText = findViewById<EditText>(R.id.userIdEditText)
-            val userIdToDelete = userIdEditText.text.toString().toLongOrNull()
+            val userIdToDelete = userIdEditText.text.toString().toIntOrNull()
 
             try {
                 if (userIdToDelete != null) {
