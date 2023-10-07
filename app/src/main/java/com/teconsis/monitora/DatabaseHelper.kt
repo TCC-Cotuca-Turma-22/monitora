@@ -120,6 +120,37 @@ class DatabaseHelper(context: Context) : SQLiteOpenHelper(context, "monitora.db"
         }
     }
 
+    fun createAparelhoPadrao() {
+        val db = writableDatabase
+
+        val aparelhos = listOf(
+            "TV Sala",
+            "TV Quarto"
+        )
+
+        if (!aparelhoExiste(db)) {
+            for (descricao in aparelhos) {
+                val values = ContentValues()
+                values.put(COLUMN_DESCRICAO_AP, descricao)
+                values.putNull(COLUMN_CODIGO_INFRA)
+                db.insert(TABLE_APARELHOS, null, values)
+            }
+        }
+    }
+
+    fun createDispositivoPadrao() {
+        val db = writableDatabase
+
+        val dispositivo = "SmartOff"
+
+        if (!dispositivoExiste(db)) {
+            val contentValues = ContentValues()
+            contentValues.put(COLUMN_DESCRICAO_DISP, dispositivo)
+            contentValues.putNull(COLUMN_ID_APARELHO_FK)
+            db.insert(TABLE_DISPOSITIVOS, null, contentValues)
+        }
+    }
+
     override fun onUpgrade(db: SQLiteDatabase?, oldVersion: Int, newVersion: Int) {
         // Atualize o esquema do banco de dados, se necessário
     }
@@ -195,6 +226,20 @@ class DatabaseHelper(context: Context) : SQLiteOpenHelper(context, "monitora.db"
             values,
             "$COLUMN_ID = ?",
             arrayOf(id.toString())
+        )
+    }
+
+    fun updateUserByEmail(email: String, novoPassword: String): Int {
+        val values = ContentValues()
+
+        values.put(COLUMN_PASSWORD, novoPassword)
+
+        val db = writableDatabase
+        return db.update(
+            TABLE_USERS,
+            values,
+            "$COLUMN_EMAIL = ?",
+            arrayOf(email)
         )
     }
 
@@ -364,6 +409,40 @@ class DatabaseHelper(context: Context) : SQLiteOpenHelper(context, "monitora.db"
             if (it.moveToFirst()) {
                 val count = it.getInt(0)
                 return count > 0
+            }
+        }
+        return false
+    }
+
+    private fun aparelhoExiste(db: SQLiteDatabase?): Boolean {
+        val query = "SELECT COUNT(*) FROM $TABLE_APARELHOS"
+        val cursor = db?.rawQuery(query, null)
+
+        cursor.use {
+            if (it != null) {
+                if (it.moveToFirst()){
+                    val count = it?.getInt(0)
+                    if (count != null) {
+                        return count > 0
+                    }
+                }
+            }
+        }
+        return false
+    }
+
+    private fun dispositivoExiste(db: SQLiteDatabase?): Boolean {
+        val query = "SELECT COUNT(*) FROM $TABLE_DISPOSITIVOS"
+        val cursor = db?.rawQuery(query, null)
+
+        cursor.use {
+            if (it != null) {
+                if (it.moveToFirst()){
+                    val count = it?.getInt(0)
+                    if (count != null) {
+                        return count > 0
+                    }
+                }
             }
         }
         return false

@@ -3,12 +3,25 @@ package com.teconsis.monitora
 import android.content.Context
 import android.content.Intent
 import android.os.Bundle
+import android.util.Log
 import android.util.Patterns
 import android.widget.Button
 import android.widget.EditText
-import android.widget.TextView
 import android.widget.Toast
 import androidx.appcompat.app.AppCompatActivity
+import kotlinx.coroutines.Dispatchers
+import kotlinx.coroutines.GlobalScope
+import kotlinx.coroutines.launch
+import java.util.Properties
+import java.util.Random
+import javax.mail.Authenticator
+import javax.mail.Message
+import javax.mail.MessagingException
+import javax.mail.PasswordAuthentication
+import javax.mail.Session
+import javax.mail.Transport
+import javax.mail.internet.InternetAddress
+import javax.mail.internet.MimeMessage
 
 class MainActivity : AppCompatActivity() {
 
@@ -24,12 +37,14 @@ class MainActivity : AppCompatActivity() {
         passwordEditText = findViewById(R.id.passwordEditText)
         val loginButton: Button = findViewById(R.id.loginButton)
         val novoButton: Button = findViewById(R.id.novoButton)
-        val forgotPasswordLink: TextView = findViewById(R.id.forgotPasswordLink)
+        val forgotPasswordLink: Button = findViewById(R.id.forgotPasswordLink)
 
         databaseHelper = DatabaseHelper(this)
         databaseHelper.createAdminUser()
         databaseHelper.createModoOperacaoPadrao()
-       // databaseHelper.insertAparelho("78910","TV Teste 2")
+        databaseHelper.createDispositivoPadrao()
+        databaseHelper.createAparelhoPadrao()
+
         loginButton.setOnClickListener {
             val email = emailEditText.text.toString()
             val password = passwordEditText.text.toString()
@@ -66,9 +81,67 @@ class MainActivity : AppCompatActivity() {
             startActivity(intent)
         }
 
-        forgotPasswordLink.setOnClickListener {
-            // Lógica para lidar com a opção "Esqueceu a senha?"
+        fun generateRandomPassword(): String {
+            val characters = "ABCDEFGHIJKLMNOPQRSTUVWXYZabcdefghijklmnopqrstuvwxyz"
+            val random = Random()
+            val password = StringBuilder(6)
+
+            for (i in 0 until 6) {
+                val index = random.nextInt(characters.length)
+                password.append(characters[index])
+            }
+
+            return password.toString()
         }
+
+        forgotPasswordLink.setOnClickListener {
+            val userEmail = emailEditText.text.toString()
+
+            val newPassword = generateRandomPassword()
+
+            val properties = Properties()
+            properties["mail.smtp.auth"] = "true"
+            properties["mail.smtp.starttls.enable"] = "true"
+            properties["mail.smtp.host"] = "smtp.gmail.com"
+            properties["mail.smtp.port"] = "587"
+
+            val session = Session.getInstance(properties, object : Authenticator() {
+                override fun getPasswordAuthentication(): PasswordAuthentication {
+                    return PasswordAuthentication(
+                        getString(R.string.email),
+                        getString(R.string.senha)
+                    )
+                }
+            })
+
+            GlobalScope.launch(Dispatchers.IO) {
+                try {
+                    val message = MimeMessage(session)
+                    message.setFrom(InternetAddress(userEmail)) // Substitua pelo seu endereço de e-mail
+                    message.setRecipients(
+                        Message.RecipientType.TO,
+                        InternetAddress.parse(userEmail)
+                    )
+                    message.subject = "Redefinição de senha"
+                    message.setText("Sua nova senha é: $newPassword")
+
+                    Transport.send(message)
+
+                    Log.e("Email", "Email de redefinição enviado com sucesso")
+
+                    databaseHelper.updateUserByEmail(userEmail, newPassword)
+
+                } catch (e: MessagingException) {
+                    val mensagem = "Digite um email válido."
+                    runOnUiThread {
+                        Toast.makeText(applicationContext, mensagem, Toast.LENGTH_SHORT).show()
+                    }
+                } catch (e: Exception) {
+                    Log.e("Email", "Erro desconhecido", e)
+                }
+            }
+        }
+
     }
 
     private fun validateLogin(email: String, password: String): Boolean {
