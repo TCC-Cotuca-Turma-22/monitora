@@ -23,7 +23,7 @@
         android:textColorHint="#FBFAFA" />
 
     <EditText
-        android:id="@+id/temporizadorEditText"
+        android:id="@+id/codigoInfraEditText"
         android:layout_width="match_parent"
         android:layout_height="48dp"
         android:layout_below="@id/aparelhoEditText"
@@ -31,32 +31,57 @@
         android:layout_marginTop="12dp"
         android:layout_marginEnd="16dp"
         android:layout_marginBottom="16dp"
-        android:hint="Temporizador"
+        android:hint="codigo Infra"
+        android:textColor="@color/white"
+        android:textColorHint="#FBFAFA" />
+
+    <EditText
+        android:id="@+id/id_editText"
+        android:layout_width="match_parent"
+        android:layout_height="48dp"
+        android:layout_below="@id/aparelhoEditText"
+        android:layout_marginStart="16dp"
+        android:layout_marginTop="93dp"
+        android:layout_marginEnd="16dp"
+        android:layout_marginBottom="16dp"
+        android:hint="insira o id que deseja excluir"
         android:textColor="@color/white"
         android:textColorHint="#FBFAFA" />
 
     <Button
         android:id="@+id/gravarButton"
-        android:layout_width="100dp"
-        android:layout_height="50dp"
+        android:layout_width="84dp"
+        android:layout_height="59dp"
         android:layout_alignParentStart="true"
         android:layout_alignParentEnd="true"
         android:layout_alignParentBottom="true"
-        android:layout_marginStart="78dp"
-        android:layout_marginEnd="75dp"
-        android:layout_marginBottom="232dp"
+        android:layout_marginStart="43dp"
+        android:layout_marginEnd="283dp"
+        android:layout_marginBottom="66dp"
         android:text="Gravar" />
 
     <Button
-        android:id="@+id/retornarButton"
-        android:layout_width="100dp"
-        android:layout_height="50dp"
+        android:id="@+id/delete_button"
+        android:layout_width="84dp"
+        android:layout_height="59dp"
         android:layout_alignParentStart="true"
         android:layout_alignParentEnd="true"
         android:layout_alignParentBottom="true"
-        android:layout_marginStart="78dp"
-        android:layout_marginEnd="75dp"
-        android:layout_marginBottom="157dp"
+        android:layout_marginStart="156dp"
+        android:layout_marginEnd="170dp"
+        android:layout_marginBottom="67dp"
+        android:text="deletar" />
+
+    <Button
+        android:id="@+id/retornarButton"
+        android:layout_width="wrap_content"
+        android:layout_height="59dp"
+        android:layout_alignParentStart="true"
+        android:layout_alignParentEnd="true"
+        android:layout_alignParentBottom="true"
+        android:layout_marginStart="291dp"
+        android:layout_marginEnd="34dp"
+        android:layout_marginBottom="67dp"
         android:text="Voltar" />
 
 </RelativeLayout>

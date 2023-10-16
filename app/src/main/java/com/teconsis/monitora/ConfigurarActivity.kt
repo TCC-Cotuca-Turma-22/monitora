@@ -3,40 +3,91 @@ package com.teconsis.monitora
 import android.content.Intent
 import android.os.Bundle
 import android.util.Log
+import android.view.View
 import android.widget.Button
 import android.widget.EditText
+import android.widget.Toast
 import androidx.appcompat.app.AppCompatActivity
+import com.teconsis.monitora.databinding.ActivityConfigurarBinding
+import kotlin.math.log
 
-class ConfigurarActivity : AppCompatActivity() {
+class ConfigurarActivity : AppCompatActivity(), View.OnClickListener {
 
-    private lateinit var aparelhoEditText: EditText
-    private lateinit var temporizadorEditText: EditText
+    private lateinit var binding: ActivityConfigurarBinding
+    private lateinit var databaseHelper: DatabaseHelper
+
 
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
         setContentView(R.layout.activity_configurar)
 
-        aparelhoEditText = findViewById(R.id.aparelhoEditText)
-        temporizadorEditText = findViewById(R.id.temporizadorEditText)
-        val gravarButton: Button = findViewById(R.id.gravarButton)
-        val retornarButton: Button = findViewById(R.id.retornarButton)
+        binding = ActivityConfigurarBinding.inflate(layoutInflater)
+        setContentView(binding.root)
 
-        gravarButton.setOnClickListener {
-            val aparelho = aparelhoEditText.text.toString()
-            val temporizador = temporizadorEditText.text.toString()
+        databaseHelper = DatabaseHelper(this)
 
-            // Lógica para gravar os dados de aparelho e temporizador na tabela DISPOSITIVOS
-            // e adicioná-los à lista de dados
+        binding.gravarButton.setOnClickListener(this)
 
-            // Limpar os campos de texto após a gravação
-            aparelhoEditText.text.clear()
-            temporizadorEditText.text.clear()
-        }
+        binding.deleteButton.setOnClickListener(this)
 
-        retornarButton.setOnClickListener {
-            val intent = Intent(this, MainActivity::class.java)
-            startActivity(intent)
-            finish()
-        }
+
+        //esse log d esta aqui para poder ver os dados do banco pelo logcat
+        Log.d("aparelhos", databaseHelper.getAllAparelhos().toString())
+
+
+
     }
+
+    override fun onClick(view: View) {
+        funAparelho(view)
+    }
+
+    private fun funAparelho(view: View){
+
+        if(view.id == R.id.gravarButton){
+            val descricao = binding.aparelhoEditText.text.toString()
+            val codigoInfra = binding.codigoInfraEditText.text.toString()
+
+            try {
+                val insertedId = databaseHelper.insertAparelho(codigoInfra, descricao)
+
+                if (insertedId != -1L) {
+                    Toast.makeText(this, "APARELHO INSERIDO COM SUCESSO!", Toast.LENGTH_SHORT).show()
+                } else {
+                    Toast.makeText(this, "Falha ao inserir aparelho no banco de dados.", Toast.LENGTH_SHORT).show()
+                }
+            } catch (e: Exception) {
+                Log.e("ConfigurarActivity", "Erro ao inserir aparelho: ${e.message}")
+                Toast.makeText(this, "Erro ao inserir aparelho. Por favor, tente novamente.", Toast.LENGTH_SHORT).show()
+            }
+
+
+
+        }
+
+        if (view.id == R.id.delete_button) {
+            val idString = binding.idEditText.text.toString()
+
+            if (idString.isNotEmpty()) {
+                val id: Long = idString.toLong()
+                val rowsAffected = databaseHelper.deletarAparelhoPorId(id)
+
+                if (rowsAffected > 0) {
+                    Log.d("ConfigurarActivity", "Aparelho deletado com sucesso")
+                    Toast.makeText(this, "aparelho deletado com sucesso", Toast.LENGTH_SHORT).show()
+                } else {
+                    Log.e("ConfigurarActivity", "Falha ao deletar aparelho")
+                    Toast.makeText(this, "Falha ao deletar aparelho", Toast.LENGTH_SHORT).show()
+                }
+            } else {
+                Log.e("ConfigurarActivity", "ID vazio")
+                Toast.makeText(this, "ID vazio", Toast.LENGTH_SHORT).show()
+            }
+        }
+
+
+    }
+
+
+
 }
