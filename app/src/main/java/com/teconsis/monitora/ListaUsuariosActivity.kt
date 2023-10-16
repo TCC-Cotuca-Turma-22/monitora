@@ -51,7 +51,6 @@ class ListaUsuariosActivity : AppCompatActivity() {
                 errorTextView.visibility = View.GONE
                 userIdEditTextContainer.visibility = View.VISIBLE
                 deleteButton.isEnabled = true
-                // Exibi em um ListView
                 val adapter = ArrayAdapter(this, android.R.layout.simple_list_item_1, userList)
                 userListView.adapter = adapter
             } else {
