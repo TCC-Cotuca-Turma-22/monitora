@@ -197,7 +197,7 @@ class DatabaseHelper(context: Context) : SQLiteOpenHelper(context, "monitora.db"
         return result.toInt() != 1
     }
 
-    private fun isEmailExists(email: String): Boolean {
+    fun isEmailExists(email: String): Boolean {
         val db = readableDatabase
         val query = "SELECT COUNT(*) FROM $TABLE_USERS WHERE $COLUMN_EMAIL = ?"
         val cursor = db.rawQuery(query, arrayOf(email))
