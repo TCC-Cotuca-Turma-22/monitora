@@ -44,20 +44,22 @@
         android:layout_height="50dp"
         android:layout_below="@+id/passwordEditText"
         android:layout_alignParentEnd="true"
-        android:layout_marginTop="38dp"
-        android:layout_marginEnd="21dp"
-        android:text="Novo usuário"/>
+        android:layout_marginTop="70dp"
+        android:layout_marginEnd="15dp"
+        android:background="@drawable/rounded_button"
+        android:text="Novo usuário" />
 
     <Button
         android:id="@+id/forgotPasswordLink"
-        android:layout_width="150dp"
+        android:layout_width="250dp"
         android:layout_height="50dp"
         android:layout_alignBottom="@+id/passwordEditText"
         android:layout_centerHorizontal="true"
         android:layout_marginBottom="-211dp"
         android:text="Esqueci a senha"
         android:textColor="#FFFFFFFF"
-        android:clickable="true"/>
+        android:clickable="true"
+        android:background="@drawable/rounded_button"/>
 
 
     <Button
@@ -67,7 +69,8 @@
         android:layout_below="@+id/passwordEditText"
         android:layout_centerVertical="true"
         android:layout_marginStart="16dp"
-        android:layout_marginTop="38dp"
+        android:layout_marginTop="68dp"
+        android:background="@drawable/rounded_button"
         android:text="Entrar" />
 
 </RelativeLayout>

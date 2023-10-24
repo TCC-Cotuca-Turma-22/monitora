@@ -13,10 +13,11 @@
         android:layout_height="50dp"
         android:layout_alignParentStart="true"
         android:layout_alignParentBottom="true"
-        android:layout_marginStart="47dp"
-        android:layout_marginBottom="199dp"
+        android:layout_marginStart="41dp"
+        android:layout_marginBottom="311dp"
         android:textOff="Desligado"
-        android:textOn="Ligado" />
+        android:textOn="Ligado"
+        android:background="@drawable/rounded_toggle_button"/>
 
     <Button
         android:id="@+id/configurarButton"
@@ -24,9 +25,10 @@
         android:layout_height="50dp"
         android:layout_alignParentEnd="true"
         android:layout_alignParentBottom="true"
-        android:layout_marginEnd="34dp"
-        android:layout_marginBottom="200dp"
-        android:text="Configurar" />
+        android:layout_marginEnd="39dp"
+        android:layout_marginBottom="309dp"
+        android:text="Configurar"
+        android:background="@drawable/rounded_button"/>
 
     <Button
         android:id="@+id/sairButton"
@@ -35,25 +37,10 @@
         android:layout_alignParentStart="true"
         android:layout_alignParentEnd="true"
         android:layout_alignParentBottom="true"
-        android:layout_marginStart="47dp"
-        android:layout_marginEnd="34dp"
-        android:layout_marginBottom="127dp"
-        android:text="Sair" />
-
-    <TextView
-        android:id="@+id/textView"
-        android:layout_width="334dp"
-        android:layout_height="166dp"
-        android:layout_alignParentStart="true"
-        android:layout_alignParentTop="true"
-        android:layout_alignParentEnd="true"
-        android:layout_alignParentBottom="true"
-        android:layout_marginStart="42dp"
-        android:layout_marginTop="291dp"
-        android:layout_marginEnd="35dp"
-        android:layout_marginBottom="274dp"
-        android:text="LIGUE O DISPOSITIVO E EM SEGUIDA FAÇA A SUA CONFIGURAÇÃO. (botão liga/desliga)  PARA QUE A OPERAÇÃO SEJA REALIZADA COM SUCESSO MANTENHA O APARELHO LIGADO E O CELULAR CONECTADO AO DISPOSITIVO."
-        app:autoSizeTextType="uniform" />
-
+        android:layout_marginStart="41dp"
+        android:layout_marginEnd="39dp"
+        android:layout_marginBottom="185dp"
+        android:text="Sair"
+        android:background="@drawable/rounded_button"/>
 
 </RelativeLayout>

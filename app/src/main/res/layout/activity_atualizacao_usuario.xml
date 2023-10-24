@@ -54,7 +54,8 @@
         android:layout_alignParentBottom="true"
         android:layout_marginStart="23dp"
         android:layout_marginBottom="142dp"
-        android:text="Atualizar" />
+        android:text="Atualizar"
+        android:background="@drawable/rounded_button"/>
 
     <Button
         android:id="@+id/configButton"
@@ -66,7 +67,8 @@
         android:layout_marginStart="218dp"
         android:layout_marginEnd="17dp"
         android:layout_marginBottom="142dp"
-        android:text="Configuração" />
+        android:text="Configuração"
+        android:background="@drawable/rounded_button"/>
 
 
 </RelativeLayout>
