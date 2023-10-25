@@ -39,24 +39,26 @@
 
     <Button
         android:id="@+id/returnButton"
-        android:layout_width="120dp"
-        android:layout_height="50dp"
-        android:layout_alignParentEnd="true"
+        android:layout_width="140dp"
+        android:layout_height="45dp"
+        android:layout_alignParentStart="true"
         android:layout_alignParentBottom="true"
-        android:layout_marginEnd="253dp"
+        android:layout_marginStart="15dp"
         android:layout_marginBottom="15dp"
-        android:text="Voltar" />
+        android:text="Voltar"
+        android:background="@drawable/rounded_button"/>
 
     <Button
         android:id="@+id/deleteButton"
-        android:layout_width="120dp"
-        android:layout_height="50dp"
+        android:layout_width="140dp"
+        android:layout_height="45dp"
         android:layout_alignParentEnd="true"
         android:layout_alignParentBottom="true"
-        android:layout_marginEnd="26dp"
-        android:layout_marginBottom="12dp"
+        android:layout_marginEnd="15dp"
+        android:layout_marginBottom="15dp"
         android:text="Excluir"
-        android:enabled="false"/>
+        android:enabled="false"
+        android:background="@drawable/rounded_button"/>
 
 </RelativeLayout>
 

@@ -197,7 +197,7 @@ class DatabaseHelper(context: Context) : SQLiteOpenHelper(context, "monitora.db"
         return result.toInt() != 1
     }
 
-    private fun isEmailExists(email: String): Boolean {
+    fun isEmailExists(email: String): Boolean {
         val db = readableDatabase
         val query = "SELECT COUNT(*) FROM $TABLE_USERS WHERE $COLUMN_EMAIL = ?"
         val cursor = db.rawQuery(query, arrayOf(email))
@@ -215,7 +215,7 @@ class DatabaseHelper(context: Context) : SQLiteOpenHelper(context, "monitora.db"
         val userList = mutableListOf<User>()
 
         val db = readableDatabase
-        val query = "SELECT * FROM $TABLE_USERS"
+        val query = "SELECT $COLUMN_ID, $COLUMN_EMAIL FROM $TABLE_USERS"
 
         val cursor = db.rawQuery(query, null)
 
@@ -223,9 +223,8 @@ class DatabaseHelper(context: Context) : SQLiteOpenHelper(context, "monitora.db"
             while (cursor.moveToNext()) {
                 val id = cursor.getInt(cursor.getColumnIndexOrThrow(COLUMN_ID))
                 val email = cursor.getString(cursor.getColumnIndexOrThrow(COLUMN_EMAIL))
-                val password = cursor.getString(cursor.getColumnIndexOrThrow(COLUMN_PASSWORD))
 
-                val user = User(id, email, password)
+                val user = User(id, email)
                 userList.add(user)
             }
         } catch (e: Exception) {
