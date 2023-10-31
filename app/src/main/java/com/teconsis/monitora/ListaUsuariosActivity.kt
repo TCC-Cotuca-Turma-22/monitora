@@ -75,7 +75,6 @@ class ListaUsuariosActivity : AppCompatActivity() {
                     // Chama a função para excluir o usuário do DatabaseHelper
                     val rowsDeleted = loggedInUserEmail?.let { it1 ->
                         databaseHelper.deleteUserById(it1, userIdToDelete)
-                        Log.d("userIdTodele", userIdToDelete.toString())
                     }
 
                     if (rowsDeleted != null) {

@@ -36,6 +36,16 @@
         android:text="Voltar"
         android:background="@drawable/rounded_button"/>
 
+    <Button
+        android:id="@+id/inserirButton"
+        android:layout_width="250dp"
+        android:layout_height="45dp"
+        android:layout_alignParentBottom="true"
+        android:layout_centerInParent="true"
+        android:layout_marginBottom="72dp"
+        android:text="Novo Aparelho"
+        android:background="@drawable/rounded_button"/>
+
     <Spinner
         android:id="@+id/aparelhoSpinner"
         android:layout_width="378dp"
