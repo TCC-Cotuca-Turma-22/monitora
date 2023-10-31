@@ -46,5 +46,12 @@ class CadastroAparelhoActivity : AppCompatActivity() {
             startActivity(intent)
             finish()
         }
+
+        val bluetoothButton = findViewById<Button>(R.id.bluetoothButton)
+        bluetoothButton.setOnClickListener {
+            val intent = Intent(this, BluetoothActivity::class.java)
+            startActivity(intent)
+        }
+
     }
 }
