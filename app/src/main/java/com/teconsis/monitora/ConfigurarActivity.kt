@@ -27,6 +27,7 @@ class ConfigurarActivity : AppCompatActivity() {
         temporizadorEditText = findViewById(R.id.temporizadorEditText)
         val gravarButton: Button = findViewById(R.id.gravarButton)
         val retornarButton: Button = findViewById(R.id.retornarButton)
+        val cadastrarButton: Button = findViewById(R.id.inserirButton)
 
         val aparelhoSpinner: Spinner = findViewById(R.id.aparelhoSpinner)
         val aparelhoList = databaseHelper.getAllAparelhos()
@@ -68,6 +69,12 @@ class ConfigurarActivity : AppCompatActivity() {
 
         retornarButton.setOnClickListener {
             val intent = Intent(this, ConfiguracoesActivity::class.java)
+            startActivity(intent)
+            finish()
+        }
+
+        cadastrarButton.setOnClickListener{
+            val intent = Intent(this, CadastroAparelhoActivity::class.java)
             startActivity(intent)
             finish()
         }

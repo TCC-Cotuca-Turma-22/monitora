@@ -4,10 +4,10 @@
     android:layout_width="match_parent"
     android:layout_height="match_parent"
     android:background="@drawable/fundo"
-    tools:context=".MainActivity">
+    tools:context=".CadastroAparelhoActivity">
 
     <EditText
-        android:id="@+id/emailEditText"
+        android:id="@+id/aparelhoEditText"
         android:layout_width="378dp"
         android:layout_height="49dp"
         android:layout_alignParentStart="true"
@@ -16,60 +16,60 @@
         android:layout_marginStart="15dp"
         android:layout_marginTop="310dp"
         android:layout_marginEnd="15dp"
-        android:hint="Email"
-        android:inputType="textEmailAddress"
+        android:hint="Nome do Aparelho"
+        android:textColorHint="@color/white"
         android:textColor="@color/white"
-        android:textColorHint="#FBF9F9" />
+        android:inputType="text"/>
 
     <EditText
-        android:id="@+id/passwordEditText"
+        android:id="@+id/codigoInfraEditText"
         android:layout_width="378dp"
         android:layout_height="48dp"
-        android:layout_below="@+id/emailEditText"
+        android:layout_below="@+id/aparelhoEditText"
         android:layout_alignParentStart="true"
         android:layout_alignParentTop="true"
         android:layout_alignParentEnd="true"
         android:layout_centerVertical="true"
         android:layout_marginStart="15dp"
-        android:layout_marginTop="377dp"
+        android:layout_marginTop="370dp"
         android:layout_marginEnd="15dp"
-        android:hint="Senha"
-        android:inputType="textPassword"
+        android:hint="Codigo Infra"
         android:textColor="@color/white"
-        android:textColorHint="#FBFAFA" />
+        android:textColorHint="@color/white"
+        android:inputType="text"/>
 
     <Button
-        android:id="@+id/novoButton"
+        android:id="@+id/gravarButton"
         android:layout_width="140dp"
         android:layout_height="45dp"
-        android:layout_below="@+id/passwordEditText"
-        android:layout_alignParentEnd="true"
-        android:layout_marginTop="70dp"
-        android:layout_marginEnd="15dp"
+        android:layout_alignParentStart="true"
+        android:layout_alignParentBottom="true"
+        android:layout_marginStart="15dp"
+        android:layout_marginBottom="247dp"
         android:background="@drawable/rounded_button"
-        android:text="Novo usuário" />
+        android:text="Gravar" />
 
     <Button
-        android:id="@+id/forgotPasswordLink"
+        android:id="@+id/retornarButton"
+        android:layout_width="140dp"
+        android:layout_height="45dp"
+        android:layout_alignParentStart="true"
+        android:layout_alignParentBottom="true"
+        android:layout_marginStart="256dp"
+        android:layout_marginEnd="15dp"
+        android:layout_marginBottom="247dp"
+        android:background="@drawable/rounded_button"
+        android:text="Voltar" />
+
+    <Button
+        android:id="@+id/listButton"
         android:layout_width="250dp"
         android:layout_height="45dp"
-        android:layout_alignBottom="@+id/passwordEditText"
+        android:layout_alignBottom="@+id/codigoInfraEditText"
         android:layout_centerInParent="true"
-        android:layout_marginBottom="-211dp"
+        android:layout_marginBottom="-171dp"
         android:background="@drawable/rounded_button"
         android:clickable="true"
-        android:text="Esqueci a senha" />
-
-
-    <Button
-        android:id="@+id/loginButton"
-        android:layout_width="140dp"
-        android:layout_height="45dp"
-        android:layout_below="@+id/passwordEditText"
-        android:layout_centerVertical="true"
-        android:layout_marginStart="15dp"
-        android:layout_marginTop="68dp"
-        android:background="@drawable/rounded_button"
-        android:text="Entrar" />
+        android:text="Listar Aparelhos" />
 
 </RelativeLayout>

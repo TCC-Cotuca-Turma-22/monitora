@@ -344,7 +344,6 @@ class DatabaseHelper(context: Context) : SQLiteOpenHelper(context, "monitora.db"
         return result.toInt() != -1
     }
 
-
     fun deletarAparelhoPorId(aparelhoId: Int): Int {
         val db = writableDatabase
         return db.delete(TABLE_APARELHOS, "$COLUMN_ID_APARELHO = ?", arrayOf(aparelhoId.toString()))
@@ -352,7 +351,6 @@ class DatabaseHelper(context: Context) : SQLiteOpenHelper(context, "monitora.db"
 
     fun getAllAparelhos(): List<Aparelho> {
         val aparelhoList = mutableListOf<Aparelho>()
-
         val db = readableDatabase
         val query = "SELECT * FROM $TABLE_APARELHOS"
 
