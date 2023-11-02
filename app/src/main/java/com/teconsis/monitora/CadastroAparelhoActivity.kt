@@ -19,6 +19,7 @@ class CadastroAparelhoActivity : AppCompatActivity() {
         databaseHelper = DatabaseHelper(this)
         val gravarButton: Button = findViewById(R.id.gravarButton)
         val listarButton: Button = findViewById(R.id.listButton)
+        val btnVoltar: Button = findViewById(R.id.retornarButton)
 
         aparelhoEditText = findViewById(R.id.aparelhoEditText)
         codigoInfraEditText = findViewById(R.id.codigoInfraEditText)
@@ -43,6 +44,12 @@ class CadastroAparelhoActivity : AppCompatActivity() {
 
         listarButton.setOnClickListener{
             val intent = Intent(this, ListaAparelhosActivity::class.java)
+            startActivity(intent)
+            finish()
+        }
+
+        btnVoltar.setOnClickListener{
+            val intent = Intent(this, ConfigurarActivity::class.java)
             startActivity(intent)
             finish()
         }
