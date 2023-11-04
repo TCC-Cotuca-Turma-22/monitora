@@ -3,6 +3,7 @@ package com.teconsis.monitora
 import android.content.Intent
 import androidx.appcompat.app.AppCompatActivity
 import android.os.Bundle
+import android.util.Log
 import android.widget.Button
 import android.widget.EditText
 import android.widget.Toast
@@ -49,6 +50,7 @@ class CadastroAparelhoActivity : AppCompatActivity() {
 
         val bluetoothButton = findViewById<Button>(R.id.bluetoothButton)
         bluetoothButton.setOnClickListener {
+            Log.d("Bluetooth", "Clicou no botão Bluetooth")
             val intent = Intent(this, BluetoothActivity::class.java)
             startActivity(intent)
         }

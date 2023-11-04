@@ -1,10 +1,11 @@
 <?xml version="1.0" encoding="utf-8"?>
 <RelativeLayout xmlns:android="http://schemas.android.com/apk/res/android"
     xmlns:app="http://schemas.android.com/apk/res-auto"
-    xmlns:tools="http://schemas.android.com/tools"
+
     android:layout_width="match_parent"
     android:layout_height="match_parent"
-    android:orientation="vertical">
+    android:orientation="vertical"
+    android:visibility="visible">
 
     <androidx.appcompat.widget.Toolbar
         android:id="@+id/toolbar"
@@ -18,15 +19,42 @@
         android:id="@+id/scanButton"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
-        android:text="@string/scan_for_devices"
         android:layout_below="@+id/toolbar"
-        android:layout_marginTop="16dp" />
+        android:layout_marginTop="16dp"
+        android:text="@string/scan_for_devices" />
 
     <ListView
         android:id="@+id/deviceList"
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
         android:layout_below="@+id/scanButton"
-        android:layout_marginTop="16dp" />
+        android:layout_marginTop="16dp"
+        android:visibility="visible" />
+
+    <EditText
+        android:id="@+id/messageInput"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:layout_below="@+id/deviceList"
+        android:layout_marginTop="16dp"
+        android:hint="Digite sua mensagem"
+        android:inputType="text" />
+
+    <Button
+        android:id="@+id/sendButton"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_below="@+id/messageInput"
+        android:layout_marginTop="16dp"
+        android:text="Enviar" />
+
+    <TextView
+        android:id="@+id/messageOutput"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:layout_below="@+id/sendButton"
+        android:layout_marginTop="16dp"
+        android:text=""
+        android:textSize="18sp" />
 
 </RelativeLayout>
