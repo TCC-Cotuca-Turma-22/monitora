@@ -1,4 +1,10 @@
 <resources>
     <string name="app_name">Monitora</string>
     <string name="scan_for_devices">Buscar por Dispositivos</string>
+    <string name="escanear_dispositivos">Escanear Dispositivos</string>
+    <string name="digite_sua_mensagem">Digite sua mensagem...</string>
+    <string name="enviar_mensagem">Enviar Mensagem</string>
+    <string name="status_da_conex_o_bluetooth">Status da Conexão Bluetooth</string>
+    <string name="desconectado">Desconectado</string>
+    <string name="voltar">Voltar</string>
 </resources>

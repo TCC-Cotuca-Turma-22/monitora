@@ -25,7 +25,7 @@
             android:exported="false" />
         <activity
             android:name=".ListaUsuariosActivity"
-            android:exported="false" />
+            android:exported="false" />a
         <activity
             android:name=".BluetoothActivity"
             android:exported="false" />

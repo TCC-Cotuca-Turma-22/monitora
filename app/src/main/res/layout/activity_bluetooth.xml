@@ -1,60 +1,71 @@
 <?xml version="1.0" encoding="utf-8"?>
-<RelativeLayout xmlns:android="http://schemas.android.com/apk/res/android"
-    xmlns:app="http://schemas.android.com/apk/res-auto"
-
+<RelativeLayout
+    xmlns:android="http://schemas.android.com/apk/res/android"
     android:layout_width="match_parent"
     android:layout_height="match_parent"
     android:orientation="vertical"
-    android:visibility="visible">
+    android:padding="16dp">
 
-    <androidx.appcompat.widget.Toolbar
-        android:id="@+id/toolbar"
-        android:layout_width="match_parent"
-        android:layout_height="?attr/actionBarSize"
-        android:background="?attr/colorPrimary"
-        android:theme="@style/ThemeOverlay.AppCompat.Dark.ActionBar"
-        app:title="Atividade Bluetooth" />
+    <ImageView
+        android:id="@+id/connectionStatusIcon"
+        android:layout_width="48dp"
+        android:layout_height="48dp"
+        android:src="@drawable/ic_disconnected"
+        android:contentDescription="@string/status_da_conex_o_bluetooth"
+        android:layout_centerHorizontal="true"/>
 
     <Button
-        android:id="@+id/scanButton"
+        android:id="@+id/backButton"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
-        android:layout_below="@+id/toolbar"
-        android:layout_marginTop="16dp"
-        android:text="@string/scan_for_devices" />
-
-    <ListView
-        android:id="@+id/deviceList"
-        android:layout_width="match_parent"
-        android:layout_height="wrap_content"
-        android:layout_below="@+id/scanButton"
-        android:layout_marginTop="16dp"
-        android:visibility="visible" />
+        android:text="@string/voltar"
+        android:layout_alignParentTop="true"
+        android:layout_alignParentStart="true" />
 
     <EditText
         android:id="@+id/messageInput"
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
-        android:layout_below="@+id/deviceList"
-        android:layout_marginTop="16dp"
-        android:hint="Digite sua mensagem"
-        android:inputType="text" />
+        android:hint="@string/digite_sua_mensagem"
+        android:layout_below="@+id/connectionStatusIcon"
+        android:layout_centerHorizontal="true"
+        android:layout_marginTop="16dp"/>
 
     <Button
         android:id="@+id/sendButton"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
+        android:text="@string/enviar_mensagem"
         android:layout_below="@+id/messageInput"
-        android:layout_marginTop="16dp"
-        android:text="Enviar" />
+        android:layout_centerHorizontal="true"
+        android:layout_marginTop="8dp"/>
 
     <TextView
         android:id="@+id/messageOutput"
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
         android:layout_below="@+id/sendButton"
-        android:layout_marginTop="16dp"
+        android:layout_centerHorizontal="true"
+        android:layout_marginTop="16dp"/>
+
+    <TextView
+        android:id="@+id/connectionStatusText"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:text="@string/desconectado"
+        android:textSize="14sp"
+        android:layout_below="@+id/messageOutput"
+        android:layout_centerHorizontal="true"
+        android:layout_marginTop="8dp" />
+
+    <TextView
+        android:id="@+id/pairedDeviceName"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
         android:text=""
-        android:textSize="18sp" />
+        android:textSize="18sp"
+        android:layout_below="@+id/connectionStatusText"
+        android:layout_centerHorizontal="true"
+        android:layout_marginTop="16dp" />
 
 </RelativeLayout>
