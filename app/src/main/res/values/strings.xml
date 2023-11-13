@@ -7,4 +7,8 @@
     <string name="status_da_conex_o_bluetooth">Status da Conexão Bluetooth</string>
     <string name="desconectado">Desconectado</string>
     <string name="voltar">Voltar</string>
+    <string name="status_n_o_conectado">Status: Não Conectado</string>
+    <string name="dispositivo_n_a">Dispositivo: N/A</string>
+    <string name="enviar">Enviar</string>
+    <string name="mensagens_recebidas">Mensagens Recebidas:</string>
 </resources>

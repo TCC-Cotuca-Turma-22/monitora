@@ -8,6 +8,10 @@
     <uses-permission android:name="android.permission.BLUETOOTH_SCAN" />
     <uses-permission android:name="android.permission.INTERNET" />
 
+    <uses-sdk
+        android:minSdkVersion="17"
+        android:targetSdkVersion="31" />
+
     <application
         android:allowBackup="true"
         android:dataExtractionRules="@xml/data_extraction_rules"
@@ -25,7 +29,7 @@
             android:exported="false" />
         <activity
             android:name=".ListaUsuariosActivity"
-            android:exported="false" />a
+            android:exported="false" />
         <activity
             android:name=".BluetoothActivity"
             android:exported="false" />

@@ -4,23 +4,20 @@ import android.Manifest
 import android.bluetooth.BluetoothAdapter
 import android.bluetooth.BluetoothDevice
 import android.bluetooth.BluetoothSocket
-import android.content.BroadcastReceiver
-import android.content.Context
 import android.content.Intent
-import android.content.IntentFilter
 import android.content.pm.PackageManager
+import android.os.Build
 import android.os.Bundle
-import android.view.ViewGroup
 import android.widget.Button
 import android.widget.EditText
-import android.widget.ImageView
-import android.widget.LinearLayout
 import android.widget.TextView
+import androidx.annotation.RequiresApi
 import androidx.appcompat.app.AlertDialog
 import androidx.appcompat.app.AppCompatActivity
 import androidx.core.app.ActivityCompat
-import androidx.core.content.ContextCompat
 import java.io.IOException
+import java.io.InputStream
+import java.io.OutputStream
 import java.util.UUID
 
 class BluetoothActivity : AppCompatActivity() {
@@ -28,62 +25,52 @@ class BluetoothActivity : AppCompatActivity() {
     private val bluetoothAdapter: BluetoothAdapter? by lazy { BluetoothAdapter.getDefaultAdapter() }
     private val messageInput: EditText by lazy { findViewById(R.id.messageInput) }
     private val sendButton: Button by lazy { findViewById(R.id.sendButton) }
-    private val messageOutput: TextView by lazy { findViewById(R.id.messageOutput) }
-    private val connectionStatusIcon: ImageView by lazy { findViewById(R.id.connectionStatusIcon) }
+    private val receivedMessages: TextView by lazy { findViewById(R.id.receivedMessages) }
     private val connectionStatusText: TextView by lazy { findViewById(R.id.connectionStatusText) }
-    private val backButton: Button by lazy { findViewById(R.id.getBackButton) }
     private val pairedDeviceName: TextView by lazy { findViewById(R.id.pairedDeviceName) }
 
     private val hc05DeviceName = "HC-05"
     private val hc05UUID = UUID.fromString("0000FFE0-0000-1000-8000-00805F9B34FB")
     private var bluetoothSocket: BluetoothSocket? = null
+    private var inputStream: InputStream? = null
+    private var outputStream: OutputStream? = null
 
     companion object {
         private const val REQUEST_ENABLE_BT = 1
-        private const val REQUEST_BLUETOOTH_SCAN = 2
-        private const val REQUEST_BLUETOOTH_CONNECT = 3
+        private const val BLUETOOTH_PERMISSION_REQUEST = 2
     }
 
+    @RequiresApi(Build.VERSION_CODES.S)
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
         setContentView(R.layout.activity_bluetooth)
 
         try {
             if (bluetoothAdapter == null) {
-                val builder = AlertDialog.Builder(this)
-                builder.setTitle("Bluetooth Indisponível")
-                builder.setMessage("O Bluetooth não está disponível neste dispositivo.")
-                builder.setPositiveButton("OK") { dialog, _ ->
-                    dialog.dismiss()
-                    finish()
-                }
-                val dialog = builder.create()
-                dialog.show()
+                showErrorDialog("Bluetooth Indisponível", "O Bluetooth não está disponível neste dispositivo.")
+                return
+            }
+
+            if (!bluetoothAdapter!!.isEnabled) {
+                requestBluetoothEnable()
             } else {
-                if (!bluetoothAdapter!!.isEnabled) {
-                    requestBluetoothEnable()
-                }
+                checkPairedAndConnectedDevices()
+            }
 
-                backButton.setOnClickListener {
-                    finish()
-                }
-
-                sendButton.setOnClickListener {
-                    val message = messageInput.text.toString()
-                    if (bluetoothSocket != null) {
-                        try {
-                            bluetoothSocket!!.outputStream.write(message.toByteArray())
-                            messageInput.text.clear()
-                        } catch (e: IOException) {
-                            e.printStackTrace()
-                            showMessage("Erro ao enviar mensagem: ${e.message}")
-                        }
-                    } else {
-                        showMessage("Dispositivo não conectado.")
+            sendButton.setOnClickListener {
+                val message = messageInput.text.toString()
+                if (bluetoothSocket != null && bluetoothSocket!!.isConnected) {
+                    try {
+                        bluetoothSocket!!.outputStream.write(message.toByteArray())
+                        messageInput.text.clear()
+                    } catch (e: IOException) {
+                        e.printStackTrace()
+                        showMessage("Erro ao enviar mensagem: ${e.message}")
                     }
+                } else {
+                    showMessage("Dispositivo não conectado.")
+                    checkPairedAndConnectedDevices()  // Tente reconectar automaticamente
                 }
-
-                connectToHC05()
             }
         } catch (e: Exception) {
             e.printStackTrace()
@@ -101,6 +88,7 @@ class BluetoothActivity : AppCompatActivity() {
         }
     }
 
+    @RequiresApi(Build.VERSION_CODES.S)
     private fun requestBluetoothEnable() {
         val enableBtIntent = Intent(BluetoothAdapter.ACTION_REQUEST_ENABLE)
         try {
@@ -109,7 +97,11 @@ class BluetoothActivity : AppCompatActivity() {
                     Manifest.permission.BLUETOOTH_CONNECT
                 ) != PackageManager.PERMISSION_GRANTED
             ) {
-                ActivityCompat.requestPermissions(this, arrayOf(Manifest.permission.BLUETOOTH_CONNECT), REQUEST_ENABLE_BT)
+                ActivityCompat.requestPermissions(
+                    this,
+                    arrayOf(Manifest.permission.BLUETOOTH_CONNECT),
+                    BLUETOOTH_PERMISSION_REQUEST
+                )
             } else {
                 startActivityForResult(enableBtIntent, REQUEST_ENABLE_BT)
             }
@@ -119,27 +111,32 @@ class BluetoothActivity : AppCompatActivity() {
         }
     }
 
-    private fun connectToHC05() {
+    @RequiresApi(Build.VERSION_CODES.S)
+    private fun checkPairedAndConnectedDevices() {
         try {
-            val pairedDevices = bluetoothAdapter?.bondedDevices
+            val pairedDevices: Set<BluetoothDevice>? = bluetoothAdapter?.bondedDevices
             if (pairedDevices != null) {
-                if (ActivityCompat.checkSelfPermission(
-                        this,
-                        Manifest.permission.BLUETOOTH_CONNECT
-                    ) != PackageManager.PERMISSION_GRANTED
-                ) {
-                    ActivityCompat.requestPermissions(this, arrayOf(Manifest.permission.BLUETOOTH_CONNECT), REQUEST_BLUETOOTH_CONNECT)
-                } else {
-                    for (device in pairedDevices) {
-                        if (device.name == hc05DeviceName) {
-                            try {
-                                bluetoothSocket = device.createRfcommSocketToServiceRecord(hc05UUID)
+                val iterator = pairedDevices.iterator()
+                while (iterator.hasNext()) {
+                    val device = iterator.next()
+                    if (device.name == hc05DeviceName) {
+                        showMessage("Dispositivo pareado encontrado: ${device.name}")
+                        updateConnectionStatus("Conectando ao dispositivo: ${device.name}")
+                        bluetoothSocket = device.createRfcommSocketToServiceRecord(hc05UUID)
+                        if (bluetoothSocket != null) {
+                            if (!bluetoothSocket!!.isConnected) {
                                 bluetoothSocket?.connect()
-                                showMessage("Conectado ao dispositivo: ${device.name}")
-                                pairedDeviceName.text = "Conectado a: ${device.name}"
-                            } catch (e: Exception) {
-                                e.printStackTrace()
-                                showMessage("Erro ao conectar ao dispositivo: ${e.message}")
+                            }
+                            showMessage("Conectado ao dispositivo: ${device.name}")
+                            updateConnectionStatus()
+                            pairedDeviceName.text = "Dispositivo: ${device.name}"
+
+                            // Envie senha e comando AT aqui
+                            if (sendPasswordAndATCommand()) {
+                                startListeningForMessages()
+                            } else {
+                                showMessage("Falha ao enviar senha e comando AT.")
+                                closeBluetoothSocket()
                             }
                         }
                     }
@@ -147,8 +144,48 @@ class BluetoothActivity : AppCompatActivity() {
             }
         } catch (e: Exception) {
             e.printStackTrace()
-            showMessage("Erro ao conectar ao dispositivo HC-05: ${e.message}")
+            showMessage("Erro ao verificar dispositivos pareados: ${e.message}")
         }
+    }
+
+    private fun sendPasswordAndATCommand(): Boolean {
+        return try {
+            if (bluetoothSocket != null && bluetoothSocket!!.isConnected) {
+                showMessage("Enviando senha para o dispositivo.")
+                outputStream = bluetoothSocket!!.outputStream
+                outputStream?.write("1234".toByteArray())
+
+                // Aguarde um pouco para garantir que a senha seja processada
+                Thread.sleep(500)
+
+                // Envie o comando AT
+                outputStream?.write("AT+MODE=1".toByteArray())
+
+                // Leia a resposta do dispositivo
+                val response = readResponse()
+                showMessage("Resposta do dispositivo: $response")
+
+                // Verifique se o dispositivo respondeu corretamente
+                response.contains("OK", ignoreCase = true)
+            } else {
+                showMessage("Dispositivo não conectado.")
+                false
+            }
+        } catch (e: IOException) {
+            e.printStackTrace()
+            showMessage("Erro ao enviar mensagem: ${e.message}")
+            false
+        }
+    }
+
+    private fun readResponse(): String {
+        val buffer = ByteArray(1024)
+        val bytesRead = inputStream?.read(buffer) ?: -1
+        return String(buffer, 0, bytesRead)
+    }
+
+    private fun startListeningForMessages() {
+        // Implementar a escuta de mensagens aqui, se necessário
     }
 
     private fun closeBluetoothSocket() {
@@ -160,7 +197,46 @@ class BluetoothActivity : AppCompatActivity() {
         }
     }
 
+    private fun showErrorDialog(title: String, message: String) {
+        val builder = AlertDialog.Builder(this)
+        builder.setTitle(title)
+        builder.setMessage(message)
+        builder.setPositiveButton("OK") { dialog, _ ->
+            dialog.dismiss()
+            finish()
+        }
+        val dialog = builder.create()
+        dialog.show()
+    }
+
     private fun showMessage(message: String) {
-        messageOutput.text = messageOutput.text.toString() + "\n" + message
+        runOnUiThread {
+            receivedMessages.text = receivedMessages.text.toString() + "\n" + message
+        }
+    }
+
+    private fun updateConnectionStatus(status: String = "Status: Conectado") {
+        runOnUiThread {
+            connectionStatusText.text = status
+        }
+    }
+
+    @RequiresApi(Build.VERSION_CODES.S)
+    override fun onRequestPermissionsResult(
+        requestCode: Int,
+        permissions: Array<out String>,
+        grantResults: IntArray
+    ) {
+        super.onRequestPermissionsResult(requestCode, permissions, grantResults)
+        when (requestCode) {
+            BLUETOOTH_PERMISSION_REQUEST -> {
+                if (grantResults.isNotEmpty() && grantResults[0] == PackageManager.PERMISSION_GRANTED) {
+                    // Permissão concedida, tentar conectar novamente
+                    checkPairedAndConnectedDevices()
+                } else {
+                    showMessage("Permissão Bluetooth negada. Não é possível conectar.")
+                }
+            }
+        }
     }
 }
